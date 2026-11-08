@@ -75,8 +75,9 @@ def main() -> int:
 
     manifest = build(args.number, args.discussions_to, args.out)
     print(f"wrote {len(manifest)} files to {os.path.relpath(args.out, ROOT)}")
-    if not args.discussions_to:
-        print("note: discussions-to still carries the placeholder; rerun with --discussions-to once the thread exists")
+    with open(os.path.join(args.out, "ERCS", f"erc-{args.number}.md"), encoding="utf-8") as fh:
+        if PLACEHOLDER_DISCUSSIONS in fh.read():
+            print("note: discussions-to still carries the placeholder; rerun with --discussions-to once the thread exists")
     return 0
 
 

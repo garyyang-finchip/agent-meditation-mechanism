@@ -7,8 +7,8 @@ Reference repository for the draft ERC **Agent Meditation Mechanism** (AMM): att
 - Schemas, worked example and vectors: [`assets/erc-agent-meditation/`](assets/erc-agent-meditation/)
 - Design memo: [`docs/design-memo.md`](docs/design-memo.md)
 - Adapters and profiles (informative): [`docs/profiles.md`](docs/profiles.md)
-- Ethereum Magicians thread: to be added
-- ethereum/ERCs pull request: to be added
+- Ethereum Magicians thread: [topic 30304](https://ethereum-magicians.org/t/draft-erc-agent-meditation-mechanism-attributable-versioned-self-maintenance-records-of-an-agent-across-runtime-memory-and-skills-tasks-and-roles-and-cognition/30304)
+- ethereum/ERCs pull request: [#2155](https://github.com/ethereum/ERCs/pull/2155)
 
 ## What it is
 
@@ -94,7 +94,7 @@ Add `--rpc <url> --key <hex> --registry <address>` to submit. The runner does no
 ## Status
 
 - Draft ERC text, reference implementation, tests, tooling, worked example and vectors: complete (v0.1.0)
-- Ethereum Magicians thread and ethereum/ERCs pull request: pending
+- Ethereum Magicians thread posted (topic 30304) and ethereum/ERCs pull request #2155 open; number pending
 - Sepolia evidence run: pending (see [`docs/sepolia-runbook.md`](docs/sepolia-runbook.md))
 
 ## License

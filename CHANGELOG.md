@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 (2026-11-09)
+
+- `discussions-to` set to the Ethereum Magicians thread (topic 30304); README, Magicians post draft and PR description carry the thread, the pull request (ethereum/ERCs #2155) and the repository URL (`agent-meditation-mechanism`).
+- Filing package generator prints the placeholder note only while the placeholder is still present.
+
 ## 0.1.0 (2026-11-09)
 
 First complete draft.
