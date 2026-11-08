@@ -1,0 +1,30 @@
+{
+  "name": "agent-meditation",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reference tooling for the Agent Meditation Mechanism ERC: commitments, vectors, meditation runner, filing and lint helpers",
+  "license": "CC0-1.0",
+  "author": "Gary Yang",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "vectors": "node tools/vectors.js",
+    "vectors:check": "node tools/vectors.js --check",
+    "runner": "node tools/runner.js",
+    "filing": "python3 scripts/make-filing-package.py",
+    "filing:lint": "node scripts/eipw-lint.js",
+    "filing:markdownlint": "markdownlint-cli2 --config scripts/ercs.markdownlint.yaml \"ercs-pr-package/ERCS/*.md\"",
+    "check:text": "python3 scripts/check-text.py",
+    "evidence:anvil": "scripts/evidence-run.sh anvil",
+    "evidence:summary": "node scripts/evidence-summary.js"
+  },
+  "dependencies": {
+    "ethers": "^6.13.4"
+  },
+  "devDependencies": {
+    "eipw-lint-js": "^0.11.0",
+    "markdownlint-cli2": "^0.17.2",
+    "smol-toml": "^1.3.1"
+  }
+}
