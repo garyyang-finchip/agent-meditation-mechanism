@@ -1,1 +1,57 @@
+name: CI
 
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  foundry:
+    name: Contracts and tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.7.1
+      - run: forge --version
+      - run: forge build --sizes
+      - run: forge test -vv
+
+  tooling:
+    name: Vectors, filing package and text checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: npm ci
+      - run: npm run vectors:check
+      - run: npm run check:text
+      - run: npm run filing
+      - run: npm run filing:lint
+      - run: npm run filing:markdownlint
+
+  evidence-rehearsal:
+    name: Evidence run on anvil
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.7.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: scripts/evidence-run.sh anvil
+      - uses: actions/upload-artifact@v4
+        with:
+          name: anvil-evidence
+          path: |
+            deployments/anvil.json
+            deployments/anvil/state-*.json
