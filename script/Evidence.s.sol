@@ -85,13 +85,16 @@ contract Evidence {
 
     function phaseA() external {
         uint256 fund = vm.envUint("FUND_WEI");
+        uint256 fundAgent = _envUintOr("FUND_AGENT_WEI", fund);
+        uint256 fundController = _envUintOr("FUND_CONTROLLER_WEI", fund);
+        uint256 fundOperator = _envUintOr("FUND_OPERATOR_WEI", fund);
         bool floorShort = _flag("SHORT_INTERVALS");
 
         vm.startBroadcast(deployerPk);
         AgentMeditationRegistry reg = new AgentMeditationRegistry();
-        payable(agent).transfer(fund);
-        payable(controller).transfer(fund);
-        payable(operator).transfer(fund);
+        payable(agent).transfer(fundAgent);
+        payable(controller).transfer(fundController);
+        payable(operator).transfer(fundOperator);
         vm.stopBroadcast();
 
         // Subject enrolls with the worked-example baseline and a policy with evidence-friendly intervals.
@@ -277,6 +280,12 @@ contract Evidence {
     function _registry() internal view returns (AgentMeditationRegistry) {
         string memory json = vm.readFile(stateFile);
         return AgentMeditationRegistry(vm.parseJsonAddress(json, ".registry"));
+    }
+
+    function _envUintOr(string memory name, uint256 fallback_) internal view returns (uint256) {
+        string memory raw = vm.envOr(name, "");
+        if (bytes(raw).length == 0) return fallback_;
+        return vm.envUint(name);
     }
 
     function _flag(string memory name) internal view returns (bool) {

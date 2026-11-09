@@ -20,15 +20,18 @@ The same driver runs against a local anvil with time travel instead of waiting (
 - A Sepolia RPC endpoint in `RPC_URL`.
 - A funded deployer key in `DEPLOYER_PK` (about 0.05 Sepolia ETH covers deployment, three small transfers and the run with margin at usual Sepolia gas prices).
 
-Keys for the subject, controller and operator are generated on first run into `deployments/sepolia/keys.env` (ignored by git) and reused when resuming. They receive 0.003 ETH each from the deployer in phase A; override with `FUND_WEI`.
+Keys for the subject, controller and operator are generated on first run into `deployments/sepolia/keys.env` (ignored by git) and reused when resuming. In phase A the deployer funds them from the live gas price (`cast gas-price`) with a 2x margin over their gas budgets (subject about 1.1M gas, operator 0.45M, controller 0.2M; floor 0.0005 ETH each); override with `FUND_AGENT_WEI`, `FUND_OPERATOR_WEI`, `FUND_CONTROLLER_WEI`. Before sending anything the driver prints the deployer balance against the phase A estimate and stops if it is short.
 
 ## Run
 
 ```bash
+export PATH=$HOME/.foga/foundry:$PATH # where a statically linked Foundry lives, if not already first on PATH
 export RPC_URL=https://...            # Sepolia RPC
 export DEPLOYER_PK=0x...              # funded deployer
-scripts/evidence-run.sh sepolia       # phases A, A2, wait, B, C, final
+scripts/evidence-run.sh sepolia       # phases A, A2, wait 330 s, B, C, final
 ```
+
+The run takes about ten minutes, most of it the wait that lets layer 0 become overdue under the floor. Nothing is pushed from the machine that runs it: the records appear under `deployments/` and are uploaded like any other file.
 
 Resume after an interruption at any phase:
 

@@ -48,6 +48,13 @@ else
   FORGE_EXTRA=(--slow --gas-estimate-multiplier 150)
 fi
 
+# Actor funding scaled to the live gas price (gas budgets carry a 2x margin; floor 0.0005 ETH each).
+GAS_PRICE_WEI="$(cast gas-price --rpc-url "$RPC_URL")"
+scaled() { local units="$1"; local v=$(( GAS_PRICE_WEI * units * 2 )); local floor=500000000000000; echo $(( v > floor ? v : floor )); }
+export FUND_AGENT_WEI="${FUND_AGENT_WEI:-$(scaled 1100000)}"
+export FUND_OPERATOR_WEI="${FUND_OPERATOR_WEI:-$(scaled 450000)}"
+export FUND_CONTROLLER_WEI="${FUND_CONTROLLER_WEI:-$(scaled 200000)}"
+
 if [[ -f "$OUT/keys.env" ]]; then
   # shellcheck disable=SC1090
   source "$OUT/keys.env"
@@ -90,8 +97,21 @@ wait_for_overdue() {
   fi
 }
 
+precheck() {
+  local deployer; deployer="$(cast wallet address --private-key "$DEPLOYER_PK")"
+  local balance; balance="$(cast balance "$deployer" --rpc-url "$RPC_URL")"
+  local deploy_cost=$(( GAS_PRICE_WEI * 4500000 * 3 / 2 ))
+  local need=$(( deploy_cost + FUND_AGENT_WEI + FUND_OPERATOR_WEI + FUND_CONTROLLER_WEI + GAS_PRICE_WEI * 300000 ))
+  log "deployer $deployer balance $(cast from-wei "$balance") ETH; gas price $(cast from-wei "$GAS_PRICE_WEI" gwei) gwei; phase A needs about $(cast from-wei "$need") ETH"
+  if [[ "$balance" -lt "$need" ]]; then
+    echo "deployer balance is below the phase A estimate; top it up or lower FUND_*_WEI" >&2
+    exit 3
+  fi
+}
+
 case "$START_AT" in
   phaseA)
+    precheck
     run_phase "phaseA()"; cp "$OUT/state.json" "$OUT/state-A.json"
     next_block
     ;&

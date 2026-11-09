@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2 (2026-11-09)
+
+- Evidence driver: actor funding scaled to the live gas price with per-actor overrides; deployer balance pre-check before phase A; Foundry PATH note in the runbook.
+
 ## 0.1.1 (2026-11-09)
 
 - `discussions-to` set to the Ethereum Magicians thread (topic 30304); README, Magicians post draft and PR description carry the thread, the pull request (ethereum/ERCs #2155) and the repository URL (`agent-meditation-mechanism`).
