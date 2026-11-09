@@ -45,7 +45,9 @@ if [[ "$NETWORK" == "anvil" ]]; then
 else
   : "${RPC_URL:?set RPC_URL}"
   : "${DEPLOYER_PK:?set DEPLOYER_PK (funded deployer)}"
-  FORGE_EXTRA=(--slow --gas-estimate-multiplier 150)
+  # Live networks: skip the local simulation so gas limits come from the node (eth_estimateGas under the
+  # chain's own gas schedule), with a 1.5x margin; --slow waits for each receipt before the next send.
+  FORGE_EXTRA=(--skip-simulation --slow --gas-estimate-multiplier 150)
 fi
 
 # Actor funding scaled to the live gas price (gas budgets carry a 2x margin; floor 0.0005 ETH each).

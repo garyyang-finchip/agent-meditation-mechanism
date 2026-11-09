@@ -42,7 +42,7 @@ scripts/evidence-run.sh sepolia phaseC
 scripts/evidence-run.sh sepolia final
 ```
 
-Live runs pass `--slow --gas-estimate-multiplier 150` to `forge script`; gas limits come from the node's estimates, which matter on Sepolia where the current gas schedule prices some operations several times higher than a local anvil does.
+Live runs pass `--skip-simulation --slow --gas-estimate-multiplier 150` to `forge script`. Skipping the local simulation makes every gas limit come from the node's own `eth_estimateGas`; this matters on Sepolia, whose current gas schedule prices contract deployment far above a local EVM (a first attempt with locally estimated limits ran out of gas at 5.5M on the registry deployment). The 1.5x margin sits on top of the node's estimate; `--slow` waits for each receipt before the next send.
 
 ## Records
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3 (2026-11-09)
+
+- Evidence driver: live runs use `--skip-simulation` so gas limits come from the node's `eth_estimateGas` (the registry deployment ran out of gas on Sepolia with locally estimated limits).
+
 ## 0.1.2 (2026-11-09)
 
 - Evidence driver: actor funding scaled to the live gas price with per-actor overrides; deployer balance pre-check before phase A; Foundry PATH note in the runbook.
