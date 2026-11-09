@@ -1,0 +1,544 @@
+{
+  "network": "sepolia",
+  "registry": "0x184dF595404414f91aD11986C47B9a539eF9559f",
+  "actors": {
+    "agent": "0x05D01638a215413910cF3A40d9BdA230dA8b82E1",
+    "controller": "0xE137daf9447fF49C53b12692A0881f1815755e91",
+    "operator": "0xA05b0F1796151c8a46d74Ec0A753231591DEDfcf"
+  },
+  "snapshots": {
+    "afterPhaseA": {
+      "phase": "A",
+      "registry": "0x184dF595404414f91aD11986C47B9a539eF9559f",
+      "agent": "0x05D01638a215413910cF3A40d9BdA230dA8b82E1",
+      "controller": "0xE137daf9447fF49C53b12692A0881f1815755e91",
+      "operator": "0xA05b0F1796151c8a46d74Ec0A753231591DEDfcf",
+      "clock": 1794189264,
+      "stateVersion": 1,
+      "recordCount": 0,
+      "policyVersion": 1,
+      "floorVersion": 0,
+      "root": "0x090e63d66e6cdb08331fece350bd0320551287d53d6644d5af158b04d94d149f",
+      "signal": {
+        "status": "PRESENT",
+        "lastSignalAt": 1794189264,
+        "silentSince": 0
+      },
+      "layers": [
+        {
+          "layer": 0,
+          "status": "FRESH",
+          "deadline": 1794189864,
+          "neverCompleted": true,
+          "commitment": "0x053bdcecda479dd30b5bfd7a02661df67b79e978fea6888245df8aa167d6d282",
+          "lastCompletedAt": 0,
+          "lastChangedVersion": 1
+        },
+        {
+          "layer": 1,
+          "status": "FRESH",
+          "deadline": 1794191064,
+          "neverCompleted": true,
+          "commitment": "0x3a8a0162793df87f7094634e37d9e5d3d8470bd43cc7fee5669f609d922ee9c3",
+          "lastCompletedAt": 0,
+          "lastChangedVersion": 1
+        },
+        {
+          "layer": 2,
+          "status": "FRESH",
+          "deadline": 1794192864,
+          "neverCompleted": true,
+          "commitment": "0x3d3356ae1bc86136718f1ecd7f42d8a0570db2d21116c886cab291a789010585",
+          "lastCompletedAt": 0,
+          "lastChangedVersion": 1
+        },
+        {
+          "layer": 3,
+          "status": "FRESH",
+          "deadline": 1794196464,
+          "neverCompleted": true,
+          "commitment": "0xbe9a1abba6f84ec051c3eb91bb19e2d3504d773da883b94aece5ee9e37c79e8e",
+          "lastCompletedAt": 0,
+          "lastChangedVersion": 1
+        }
+      ]
+    },
+    "afterPhaseA2": {
+      "phase": "A2",
+      "registry": "0x184dF595404414f91aD11986C47B9a539eF9559f",
+      "agent": "0x05D01638a215413910cF3A40d9BdA230dA8b82E1",
+      "controller": "0xE137daf9447fF49C53b12692A0881f1815755e91",
+      "operator": "0xA05b0F1796151c8a46d74Ec0A753231591DEDfcf",
+      "clock": 1794189348,
+      "stateVersion": 2,
+      "recordCount": 2,
+      "policyVersion": 1,
+      "floorVersion": 1,
+      "root": "0x9918ebff7f3bc97ca08580033da3aa99b27871d8d57b2b8c9845221fa3dec3de",
+      "signal": {
+        "status": "PRESENT",
+        "lastSignalAt": 1794189348,
+        "silentSince": 0
+      },
+      "layers": [
+        {
+          "layer": 0,
+          "status": "FRESH",
+          "deadline": 1794189648,
+          "neverCompleted": false,
+          "commitment": "0xb5a33b6d3732e664a08a19ed068432a6ab1085bf7013b3ffce1ff88ec7dd8519",
+          "lastCompletedAt": 1794189348,
+          "lastChangedVersion": 2
+        },
+        {
+          "layer": 1,
+          "status": "FRESH",
+          "deadline": 1794191148,
+          "neverCompleted": false,
+          "commitment": "0xd24fedfca7a64b7596414751a6d4a1ed7a89bf906bce4b453453a7b086d26641",
+          "lastCompletedAt": 1794189348,
+          "lastChangedVersion": 2
+        },
+        {
+          "layer": 2,
+          "status": "FRESH",
+          "deadline": 1794192948,
+          "neverCompleted": false,
+          "commitment": "0x8f03de4a144d8d453c84d2d4546fb0f01af23bd6f7ba31d18dac0c6dd1a942f0",
+          "lastCompletedAt": 1794189348,
+          "lastChangedVersion": 2
+        },
+        {
+          "layer": 3,
+          "status": "FRESH",
+          "deadline": 1794189948,
+          "neverCompleted": false,
+          "commitment": "0xbe9a1abba6f84ec051c3eb91bb19e2d3504d773da883b94aece5ee9e37c79e8e",
+          "lastCompletedAt": 1794189348,
+          "lastChangedVersion": 1
+        }
+      ]
+    },
+    "overdue": {
+      "phase": "overdue",
+      "registry": "0x184dF595404414f91aD11986C47B9a539eF9559f",
+      "agent": "0x05D01638a215413910cF3A40d9BdA230dA8b82E1",
+      "controller": "0xE137daf9447fF49C53b12692A0881f1815755e91",
+      "operator": "0xA05b0F1796151c8a46d74Ec0A753231591DEDfcf",
+      "clock": 1794189732,
+      "stateVersion": 2,
+      "recordCount": 2,
+      "policyVersion": 1,
+      "floorVersion": 1,
+      "root": "0x9918ebff7f3bc97ca08580033da3aa99b27871d8d57b2b8c9845221fa3dec3de",
+      "signal": {
+        "status": "SILENT",
+        "lastSignalAt": 1794189384,
+        "silentSince": 1794189504
+      },
+      "layers": [
+        {
+          "layer": 0,
+          "status": "OVERDUE",
+          "deadline": 1794189648,
+          "neverCompleted": false,
+          "commitment": "0xb5a33b6d3732e664a08a19ed068432a6ab1085bf7013b3ffce1ff88ec7dd8519",
+          "lastCompletedAt": 1794189348,
+          "lastChangedVersion": 2
+        },
+        {
+          "layer": 1,
+          "status": "FRESH",
+          "deadline": 1794191148,
+          "neverCompleted": false,
+          "commitment": "0xd24fedfca7a64b7596414751a6d4a1ed7a89bf906bce4b453453a7b086d26641",
+          "lastCompletedAt": 1794189348,
+          "lastChangedVersion": 2
+        },
+        {
+          "layer": 2,
+          "status": "FRESH",
+          "deadline": 1794192948,
+          "neverCompleted": false,
+          "commitment": "0x8f03de4a144d8d453c84d2d4546fb0f01af23bd6f7ba31d18dac0c6dd1a942f0",
+          "lastCompletedAt": 1794189348,
+          "lastChangedVersion": 2
+        },
+        {
+          "layer": 3,
+          "status": "FRESH",
+          "deadline": 1794189948,
+          "neverCompleted": false,
+          "commitment": "0xbe9a1abba6f84ec051c3eb91bb19e2d3504d773da883b94aece5ee9e37c79e8e",
+          "lastCompletedAt": 1794189348,
+          "lastChangedVersion": 1
+        }
+      ]
+    },
+    "afterPhaseB": {
+      "phase": "B",
+      "registry": "0x184dF595404414f91aD11986C47B9a539eF9559f",
+      "agent": "0x05D01638a215413910cF3A40d9BdA230dA8b82E1",
+      "controller": "0xE137daf9447fF49C53b12692A0881f1815755e91",
+      "operator": "0xA05b0F1796151c8a46d74Ec0A753231591DEDfcf",
+      "clock": 1794189732,
+      "stateVersion": 4,
+      "recordCount": 4,
+      "policyVersion": 1,
+      "floorVersion": 1,
+      "root": "0x526cb62798ae2fd09b1a994bd5d1cef8da876635effd3a9fcc0b8cfeddd847a1",
+      "signal": {
+        "status": "PRESENT",
+        "lastSignalAt": 1794189732,
+        "silentSince": 0
+      },
+      "layers": [
+        {
+          "layer": 0,
+          "status": "FRESH",
+          "deadline": 1794190032,
+          "neverCompleted": false,
+          "commitment": "0x33f874583fbb80fb067be00b6a9b390e53171e9fe17ba9a1030e1da1751ff3e4",
+          "lastCompletedAt": 1794189732,
+          "lastChangedVersion": 4
+        },
+        {
+          "layer": 1,
+          "status": "FRESH",
+          "deadline": 1794191148,
+          "neverCompleted": false,
+          "commitment": "0xd24fedfca7a64b7596414751a6d4a1ed7a89bf906bce4b453453a7b086d26641",
+          "lastCompletedAt": 1794189348,
+          "lastChangedVersion": 2
+        },
+        {
+          "layer": 2,
+          "status": "FRESH",
+          "deadline": 1794192948,
+          "neverCompleted": false,
+          "commitment": "0x8f03de4a144d8d453c84d2d4546fb0f01af23bd6f7ba31d18dac0c6dd1a942f0",
+          "lastCompletedAt": 1794189348,
+          "lastChangedVersion": 2
+        },
+        {
+          "layer": 3,
+          "status": "FRESH",
+          "deadline": 1794196932,
+          "neverCompleted": false,
+          "commitment": "0xf6d862a415c17a3a0932da98b5fd8686d51f00551784d23f5814b05f1ad683d6",
+          "lastCompletedAt": 1794189732,
+          "lastChangedVersion": 3
+        }
+      ]
+    },
+    "afterPhaseC": {
+      "phase": "C",
+      "registry": "0x184dF595404414f91aD11986C47B9a539eF9559f",
+      "agent": "0x05D01638a215413910cF3A40d9BdA230dA8b82E1",
+      "controller": "0xE137daf9447fF49C53b12692A0881f1815755e91",
+      "operator": "0xA05b0F1796151c8a46d74Ec0A753231591DEDfcf",
+      "clock": 1794189756,
+      "stateVersion": 5,
+      "recordCount": 6,
+      "policyVersion": 2,
+      "floorVersion": 1,
+      "root": "0x9918ebff7f3bc97ca08580033da3aa99b27871d8d57b2b8c9845221fa3dec3de",
+      "signal": {
+        "status": "PRESENT",
+        "lastSignalAt": 1794189756,
+        "silentSince": 0
+      },
+      "layers": [
+        {
+          "layer": 0,
+          "status": "FRESH",
+          "deadline": 1794190056,
+          "neverCompleted": false,
+          "commitment": "0xb5a33b6d3732e664a08a19ed068432a6ab1085bf7013b3ffce1ff88ec7dd8519",
+          "lastCompletedAt": 1794189756,
+          "lastChangedVersion": 5
+        },
+        {
+          "layer": 1,
+          "status": "FRESH",
+          "deadline": 1794191148,
+          "neverCompleted": false,
+          "commitment": "0xd24fedfca7a64b7596414751a6d4a1ed7a89bf906bce4b453453a7b086d26641",
+          "lastCompletedAt": 1794189348,
+          "lastChangedVersion": 2
+        },
+        {
+          "layer": 2,
+          "status": "FRESH",
+          "deadline": 1794192948,
+          "neverCompleted": false,
+          "commitment": "0x8f03de4a144d8d453c84d2d4546fb0f01af23bd6f7ba31d18dac0c6dd1a942f0",
+          "lastCompletedAt": 1794189348,
+          "lastChangedVersion": 2
+        },
+        {
+          "layer": 3,
+          "status": "FRESH",
+          "deadline": 1794196956,
+          "neverCompleted": false,
+          "commitment": "0xbe9a1abba6f84ec051c3eb91bb19e2d3504d773da883b94aece5ee9e37c79e8e",
+          "lastCompletedAt": 1794189756,
+          "lastChangedVersion": 5
+        }
+      ]
+    },
+    "final": {
+      "phase": "final",
+      "registry": "0x184dF595404414f91aD11986C47B9a539eF9559f",
+      "agent": "0x05D01638a215413910cF3A40d9BdA230dA8b82E1",
+      "controller": "0xE137daf9447fF49C53b12692A0881f1815755e91",
+      "operator": "0xA05b0F1796151c8a46d74Ec0A753231591DEDfcf",
+      "clock": 1794189792,
+      "stateVersion": 5,
+      "recordCount": 6,
+      "policyVersion": 2,
+      "floorVersion": 1,
+      "root": "0x9918ebff7f3bc97ca08580033da3aa99b27871d8d57b2b8c9845221fa3dec3de",
+      "signal": {
+        "status": "PRESENT",
+        "lastSignalAt": 1794189792,
+        "silentSince": 0
+      },
+      "layers": [
+        {
+          "layer": 0,
+          "status": "FRESH",
+          "deadline": 1794190056,
+          "neverCompleted": false,
+          "commitment": "0xb5a33b6d3732e664a08a19ed068432a6ab1085bf7013b3ffce1ff88ec7dd8519",
+          "lastCompletedAt": 1794189756,
+          "lastChangedVersion": 5
+        },
+        {
+          "layer": 1,
+          "status": "FRESH",
+          "deadline": 1794191148,
+          "neverCompleted": false,
+          "commitment": "0xd24fedfca7a64b7596414751a6d4a1ed7a89bf906bce4b453453a7b086d26641",
+          "lastCompletedAt": 1794189348,
+          "lastChangedVersion": 2
+        },
+        {
+          "layer": 2,
+          "status": "FRESH",
+          "deadline": 1794192948,
+          "neverCompleted": false,
+          "commitment": "0x8f03de4a144d8d453c84d2d4546fb0f01af23bd6f7ba31d18dac0c6dd1a942f0",
+          "lastCompletedAt": 1794189348,
+          "lastChangedVersion": 2
+        },
+        {
+          "layer": 3,
+          "status": "FRESH",
+          "deadline": 1794196956,
+          "neverCompleted": false,
+          "commitment": "0xbe9a1abba6f84ec051c3eb91bb19e2d3504d773da883b94aece5ee9e37c79e8e",
+          "lastCompletedAt": 1794189756,
+          "lastChangedVersion": 5
+        }
+      ]
+    }
+  },
+  "transactions": [
+    {
+      "phase": "phaseA",
+      "chainId": 11155111,
+      "type": "CREATE",
+      "contract": "AgentMeditationRegistry",
+      "function": null,
+      "from": "0xfa07f7a6d9e03c1de0f7241463c9dcab76822080",
+      "to": "0x184df595404414f91ad11986c47b9a539ef9559f",
+      "hash": "0x3a68a0f26f4f6bfc527963ce3d6b539e809a7f67fe39bd2b11fe654a0ff6abc1",
+      "blockNumber": 12094378,
+      "gasUsed": 26094653,
+      "status": "0x1"
+    },
+    {
+      "phase": "phaseA",
+      "chainId": 11155111,
+      "type": "CALL",
+      "contract": null,
+      "function": null,
+      "from": "0xfa07f7a6d9e03c1de0f7241463c9dcab76822080",
+      "to": "0x05d01638a215413910cf3a40d9bda230da8b82e1",
+      "hash": "0x69640752b03180dcdfde594ea94837411c8041cb3cc63e9faca3286344327932",
+      "blockNumber": 12094379,
+      "gasUsed": 204600,
+      "status": "0x1"
+    },
+    {
+      "phase": "phaseA",
+      "chainId": 11155111,
+      "type": "CALL",
+      "contract": null,
+      "function": null,
+      "from": "0xfa07f7a6d9e03c1de0f7241463c9dcab76822080",
+      "to": "0xe137daf9447ff49c53b12692a0881f1815755e91",
+      "hash": "0x1e9dc2578f070b02f97edd1deb488fcd64184bbb88fd92af9b0cbc73bed34fa9",
+      "blockNumber": 12094380,
+      "gasUsed": 204600,
+      "status": "0x1"
+    },
+    {
+      "phase": "phaseA",
+      "chainId": 11155111,
+      "type": "CALL",
+      "contract": null,
+      "function": null,
+      "from": "0xfa07f7a6d9e03c1de0f7241463c9dcab76822080",
+      "to": "0xa05b0f1796151c8a46d74ec0a753231591dedfcf",
+      "hash": "0x90e43df637ff74f0a8ad420c773ee69e2dff1cee9f210df0e3dcd0d6651d45fe",
+      "blockNumber": 12094381,
+      "gasUsed": 204600,
+      "status": "0x1"
+    },
+    {
+      "phase": "phaseA",
+      "chainId": 11155111,
+      "type": "CALL",
+      "contract": "AgentMeditationRegistry",
+      "function": "enroll(bytes32[4],(bytes32,string,uint8,uint8,uint8,uint8,uint48,uint48,uint48[4]),address,uint8)",
+      "from": "0x05d01638a215413910cf3a40d9bda230da8b82e1",
+      "to": "0x184df595404414f91ad11986c47b9a539ef9559f",
+      "hash": "0x95a1f32f101b41c1b77542ea6ff1eac175acf394621b4d5fcb20f310e9057c8f",
+      "blockNumber": 12094382,
+      "gasUsed": 2237725,
+      "status": "0x1"
+    },
+    {
+      "phase": "phaseA",
+      "chainId": 11155111,
+      "type": "CALL",
+      "contract": "AgentMeditationRegistry",
+      "function": "setOperator(address,uint8)",
+      "from": "0x05d01638a215413910cf3a40d9bda230da8b82e1",
+      "to": "0x184df595404414f91ad11986c47b9a539ef9559f",
+      "hash": "0xfae8343754b5ded4ced372d9840c2522bc00874237b361955c5f613cc1883a6e",
+      "blockNumber": 12094383,
+      "gasUsed": 130960,
+      "status": "0x1"
+    },
+    {
+      "phase": "phaseA2",
+      "chainId": 11155111,
+      "type": "CALL",
+      "contract": null,
+      "function": "pulse(address,uint48)",
+      "from": "0xa05b0f1796151c8a46d74ec0a753231591dedfcf",
+      "to": "0x184df595404414f91ad11986c47b9a539ef9559f",
+      "hash": "0x0e556942b0250c970e14657a8d7b676621dcae075c7d6557d8837d9cbdd3cc27",
+      "blockNumber": 12094386,
+      "gasUsed": 48119,
+      "status": "0x1"
+    },
+    {
+      "phase": "phaseA2",
+      "chainId": 11155111,
+      "type": "CALL",
+      "contract": null,
+      "function": "report(address,(uint64,bytes32,bytes32[4],uint8,uint8,uint16,uint8,uint8,uint32,uint48,uint48,uint48,uint64,bytes32,string))",
+      "from": "0xa05b0f1796151c8a46d74ec0a753231591dedfcf",
+      "to": "0x184df595404414f91ad11986c47b9a539ef9559f",
+      "hash": "0x8490238610813cab4c6b6c2fac972a6e458982d519a6c61202939a0ec550b53e",
+      "blockNumber": 12094387,
+      "gasUsed": 312039,
+      "status": "0x1"
+    },
+    {
+      "phase": "phaseA2",
+      "chainId": 11155111,
+      "type": "CALL",
+      "contract": null,
+      "function": "setFloor(address,(uint8,uint48,uint48[4]))",
+      "from": "0xe137daf9447ff49c53b12692a0881f1815755e91",
+      "to": "0x184df595404414f91ad11986c47b9a539ef9559f",
+      "hash": "0x4173bffaa2062b94a785141aa9b331706bfba7f189c6646f0e6bcb8402861929",
+      "blockNumber": 12094388,
+      "gasUsed": 255033,
+      "status": "0x1"
+    },
+    {
+      "phase": "phaseA2",
+      "chainId": 11155111,
+      "type": "CALL",
+      "contract": null,
+      "function": "demand(address,uint8,uint48)",
+      "from": "0xe137daf9447ff49c53b12692a0881f1815755e91",
+      "to": "0x184df595404414f91ad11986c47b9a539ef9559f",
+      "hash": "0xf59b3cd62b35aa7613bd762cd70f709b90f1a8af7aac8526cd4ed639b7d8b953",
+      "blockNumber": 12094389,
+      "gasUsed": 131949,
+      "status": "0x1"
+    },
+    {
+      "phase": "phaseB",
+      "chainId": 11155111,
+      "type": "CALL",
+      "contract": null,
+      "function": "report(address,(uint64,bytes32,bytes32[4],uint8,uint8,uint16,uint8,uint8,uint32,uint48,uint48,uint48,uint64,bytes32,string))",
+      "from": "0x05d01638a215413910cf3a40d9bda230da8b82e1",
+      "to": "0x184df595404414f91ad11986c47b9a539ef9559f",
+      "hash": "0x7e73abb3c1b0cab78d238726e4aa14e692800d1359338d7f99b8cbdb87cdcd13",
+      "blockNumber": 12094416,
+      "gasUsed": 233873,
+      "status": "0x1"
+    },
+    {
+      "phase": "phaseB",
+      "chainId": 11155111,
+      "type": "CALL",
+      "contract": null,
+      "function": "report(address,(uint64,bytes32,bytes32[4],uint8,uint8,uint16,uint8,uint8,uint32,uint48,uint48,uint48,uint64,bytes32,string))",
+      "from": "0xa05b0f1796151c8a46d74ec0a753231591dedfcf",
+      "to": "0x184df595404414f91ad11986c47b9a539ef9559f",
+      "hash": "0xd1c1f8a834bea8c484ad37121e10feb8227361f075ce0c91047caab091409db6",
+      "blockNumber": 12094417,
+      "gasUsed": 237221,
+      "status": "0x1"
+    },
+    {
+      "phase": "phaseC",
+      "chainId": 11155111,
+      "type": "CALL",
+      "contract": null,
+      "function": "report(address,(uint64,bytes32,bytes32[4],uint8,uint8,uint16,uint8,uint8,uint32,uint48,uint48,uint48,uint64,bytes32,string))",
+      "from": "0x05d01638a215413910cf3a40d9bda230da8b82e1",
+      "to": "0x184df595404414f91ad11986c47b9a539ef9559f",
+      "hash": "0x7eb5083e86d3a0ea3797fdafe53aec7f02ab24d1c6937543f612d2e55b4f52de",
+      "blockNumber": 12094418,
+      "gasUsed": 266697,
+      "status": "0x1"
+    },
+    {
+      "phase": "phaseC",
+      "chainId": 11155111,
+      "type": "CALL",
+      "contract": null,
+      "function": "setPolicy(address,(bytes32,string,uint8,uint8,uint8,uint8,uint48,uint48,uint48[4]))",
+      "from": "0x05d01638a215413910cf3a40d9bda230da8b82e1",
+      "to": "0x184df595404414f91ad11986c47b9a539ef9559f",
+      "hash": "0x1c7473a56f79330cf35748be4d1505fe31cf32794b2dd67c38658027b4f4e1c0",
+      "blockNumber": 12094419,
+      "gasUsed": 591536,
+      "status": "0x1"
+    },
+    {
+      "phase": "phaseC",
+      "chainId": 11155111,
+      "type": "CALL",
+      "contract": null,
+      "function": "pulse(address,uint48)",
+      "from": "0xa05b0f1796151c8a46d74ec0a753231591dedfcf",
+      "to": "0x184df595404414f91ad11986c47b9a539ef9559f",
+      "hash": "0x8a5a016d83a618869682ffb3146a66551ca1f3997fc0eee69fac660640ee288a",
+      "blockNumber": 12094420,
+      "gasUsed": 48071,
+      "status": "0x1"
+    }
+  ]
+}

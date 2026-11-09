@@ -4,6 +4,8 @@ Title (after number assignment): `ERC-8490: Agent Meditation Mechanism`
 
 ---
 
+**Status:** filed as ethereum/ERCs pull request [#2155](https://github.com/ethereum/ERCs/pull/2155); number ERC-8490 assigned on 2026-11-09. Reference repository: https://github.com/garyyang-finchip/agent-meditation-mechanism. Sepolia evidence: recorded in the repository and summarized in a reply below.
+
 This draft proposes a minimal registry through which an AI agent records its own self-maintenance: what it checked, cleaned, repaired, updated and reconsidered about itself, as a versioned and attributable history. The name follows the human analogy of maintenance that happens in a quiet phase (sleep, meditation); the mechanism itself is deliberately dry.
 
 **Why a registry at all.** An agent keeps its identity while its code, dependencies, memories, skills, plans and ways of judging keep changing. Agent runtimes already do this maintenance in the background (self-checks, dependency walks, memory consolidation, re-planning, reflection), and the results stay local. Nothing connects the successive states of one agent into a history another party can recognize, and nothing lets a counterparty ask: which state is registered now, which layers were checked recently and which of them changed, under which rules in effect at the time, and did the cycle adopt an update, confirm that nothing needed to change, or fail?
@@ -20,6 +22,6 @@ This draft proposes a minimal registry through which an AI agent records its own
 
 **Repository and evidence.** Reference implementation (dependency-free Foundry tests, 64 at the time of posting, covering the invariants: a pulse refreshes nothing; partial completion refreshes only completed layers; a policy change never erases an overdue state; a late submission keeps its reported age; an outdated base cannot overwrite a newer state; unscoped layers cannot change; the subject cannot relax below the controller's floor), reference tooling (RFC 8785 canonicalization, commitments, a meditation runner that turns an agent's documents into calls), JSON Schemas, a worked example (an MCP-timeout event cycle in which layers 0–2 adopt new states and layer 3 forms a candidate and keeps its state) and vectors: `https://github.com/garyyang-finchip/agent-meditation-mechanism`. A Sepolia evidence run (enrollment, worked-example cycle, floor and demand, overdue and silent snapshot, adoption, refresh, rollback to an earlier version, policy version 2) follows and will be recorded in the repository.
 
-Pull request: https://github.com/ethereum/ERCs/pull/2155
+Pull request: https://github.com/ethereum/ERCs/pull/2155 (ERC-8490)
 
 I would value review on three points in particular: whether the base-version/pre-root linkage plus the unscoped-layer rule is sufficient for state continuity in your implementations; whether the governing-policy rule (version in effect at the reported start) is the right place to pin interpretation; and whether the separation of pulse from maintenance timeliness is clean enough to stop "it reports, therefore it is maintained".

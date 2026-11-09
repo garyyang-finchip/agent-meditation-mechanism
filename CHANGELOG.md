@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1 (2026-11-09)
+
+- Sepolia evidence run recorded: registry `0x184dF595404414f91aD11986C47B9a539eF9559f` (Sourcify match), 15 transactions in blocks 12094378-12094420; `deployments/sepolia.json`, `docs/sepolia-evidence.md`, README deployment table, Magicians reply draft.
+- PR description and Magicians post drafts carry the ERC-8490 wording.
+
 ## 0.2.0 (2026-11-09)
 
 - Number assigned: ERC-8490. Proposal text carries `eip: 8490` and `../assets/eip-8490/` links; `discussions-to` points at the retitled thread; filing package defaults to `erc-8490`; README, Magicians post draft and PR description updated.

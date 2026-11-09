@@ -91,11 +91,19 @@ node tools/runner.js report \
 
 Add `--rpc <url> --key <hex> --registry <address>` to submit. The runner does not perform maintenance; it registers what an agent's routines produced.
 
+## Sepolia reference deployment
+
+| Contract | Address | Verification |
+| --- | --- | --- |
+| `AgentMeditationRegistry` | `0x184dF595404414f91aD11986C47B9a539eF9559f` | Sourcify: creation and runtime bytecode match |
+
+Evidence run of 2026-11-09 (15 transactions, blocks 12094378–12094420): [`docs/sepolia-evidence.md`](docs/sepolia-evidence.md), record [`deployments/sepolia.json`](deployments/sepolia.json).
+
 ## Status
 
 - ERC text, reference implementation, tests, tooling, worked example and vectors: complete
 - Number ERC-8490 assigned in ethereum/ERCs pull request #2155 (open, awaiting editor review); Ethereum Magicians topic 30304
-- Sepolia evidence run: pending (see [`docs/sepolia-runbook.md`](docs/sepolia-runbook.md))
+- Sepolia evidence run: complete (see above; runbook in [`docs/sepolia-runbook.md`](docs/sepolia-runbook.md))
 
 ## License
 
