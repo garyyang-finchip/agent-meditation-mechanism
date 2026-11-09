@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0 (2026-11-09)
+
+- Number assigned: ERC-8490. Proposal text carries `eip: 8490` and `../assets/eip-8490/` links; `discussions-to` points at the retitled thread; filing package defaults to `erc-8490`; README, Magicians post draft and PR description updated.
+
 ## 0.1.3 (2026-11-09)
 
 - Evidence driver: live runs use `--skip-simulation` so gas limits come from the node's `eth_estimateGas` (the registry deployment ran out of gas on Sepolia with locally estimated limits).

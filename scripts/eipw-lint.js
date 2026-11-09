@@ -5,7 +5,7 @@
  * Lints the proposal of a filing package with eipw (the validator used by ethereum/ERCs CI),
  * under the ERCs repository configuration vendored at scripts/eipw.toml.
  *
- *   node scripts/eipw-lint.js [ercs-pr-package/ERCS/erc-9999.md]
+ *   node scripts/eipw-lint.js [ercs-pr-package/ERCS/erc-8490.md]
  *
  * eipw reads every proposal the text references (requires header and ./eip-N.md links), so the
  * script stages the proposal in a temporary directory together with those proposals, fetched
@@ -22,7 +22,7 @@ const toml = require("smol-toml");
 const eipw = require("eipw-lint-js");
 
 const ROOT = path.join(__dirname, "..");
-const DEFAULT_FILE = path.join(ROOT, "ercs-pr-package", "ERCS", "erc-9999.md");
+const DEFAULT_FILE = path.join(ROOT, "ercs-pr-package", "ERCS", "erc-8490.md");
 const CACHE = path.join(ROOT, "node_modules", ".cache", "eipw-proposals");
 const PLACEHOLDER = "ethereum-magicians.org/t/placeholder";
 const SOURCES = [

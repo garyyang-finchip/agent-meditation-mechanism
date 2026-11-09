@@ -1,6 +1,6 @@
 # Ethereum Magicians first post (draft)
 
-Suggested title: `Draft ERC: Agent Meditation Mechanism — attributable, versioned self-maintenance records of an agent across runtime, memory and skills, tasks and roles, and cognition`
+Title (after number assignment): `ERC-8490: Agent Meditation Mechanism`
 
 ---
 

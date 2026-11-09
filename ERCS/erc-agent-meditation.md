@@ -1,9 +1,9 @@
 ---
-eip: 9999
+eip: 8490
 title: Agent Meditation Mechanism
 description: Attributable, versioned self-maintenance records of an AI agent across runtime, memory and skills, tasks and roles, and cognition
 author: Gary Yang (@garyyang-finchip)
-discussions-to: https://ethereum-magicians.org/t/draft-erc-agent-meditation-mechanism-attributable-versioned-self-maintenance-records-of-an-agent-across-runtime-memory-and-skills-tasks-and-roles-and-cognition/30304
+discussions-to: https://ethereum-magicians.org/t/erc-8490-agent-meditation-mechanism/30304
 status: Draft
 type: Standards Track
 category: ERC
@@ -201,7 +201,7 @@ Rollback is a cycle like any other: the post state equals an earlier registered 
 
 ### Interface
 
-A registry MUST implement the following interface and MUST report support for it through [ERC-165](./eip-165.md). The ERC-165 identifier of `IAgentMeditation` is `0x9c81b550`. The full interface with structures, events and documentation comments is at [`IAgentMeditation.sol`](../assets/eip-9999/contracts/IAgentMeditation.sol).
+A registry MUST implement the following interface and MUST report support for it through [ERC-165](./eip-165.md). The ERC-165 identifier of `IAgentMeditation` is `0x9c81b550`. The full interface with structures, events and documentation comments is at [`IAgentMeditation.sol`](../assets/eip-8490/contracts/IAgentMeditation.sol).
 
 ```solidity
 interface IAgentMeditation {
@@ -410,10 +410,10 @@ The reference test suite covers, among others, the following cases, each of whic
 
 The reference implementation, tooling, schemas, examples and vectors are in the assets of this ERC:
 
-- [`IAgentMeditation.sol`](../assets/eip-9999/contracts/IAgentMeditation.sol) and [`AgentMeditationRegistry.sol`](../assets/eip-9999/contracts/AgentMeditationRegistry.sol): the interface and a registry implementation with a timestamp clock.
-- [`schemas/`](../assets/eip-9999/schemas/layer-runtime.schema.json): JSON Schemas of the four layer state documents, the policy document and the cycle record document.
-- [`examples/mcp-timeout-cycle/`](../assets/eip-9999/examples/mcp-timeout-cycle/cycle-record.json): the worked example (baseline and post state documents, policy, salts, cycle record).
-- [`vectors/`](../assets/eip-9999/vectors/example-mcp-timeout.json): the vectors reproduced in the Test Cases section.
+- [`IAgentMeditation.sol`](../assets/eip-8490/contracts/IAgentMeditation.sol) and [`AgentMeditationRegistry.sol`](../assets/eip-8490/contracts/AgentMeditationRegistry.sol): the interface and a registry implementation with a timestamp clock.
+- [`schemas/`](../assets/eip-8490/schemas/layer-runtime.schema.json): JSON Schemas of the four layer state documents, the policy document and the cycle record document.
+- [`examples/mcp-timeout-cycle/`](../assets/eip-8490/examples/mcp-timeout-cycle/cycle-record.json): the worked example (baseline and post state documents, policy, salts, cycle record).
+- [`vectors/`](../assets/eip-8490/vectors/example-mcp-timeout.json): the vectors reproduced in the Test Cases section.
 
 ## Security Considerations
 

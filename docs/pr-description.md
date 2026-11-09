@@ -4,9 +4,9 @@ Title: `Add ERC: Agent Meditation Mechanism`
 
 ---
 
-This PR adds a new draft ERC, **Agent Meditation Mechanism**: a minimal registry through which an AI agent records its own self-maintenance as attributable, versioned state across four fixed layers (runtime; memory and skills; tasks and roles; cognition), with per-layer completion checkpoints, a versioned policy, a controller floor, linkage checks between successive states, and an activity signal kept apart from maintenance timeliness.
+This PR adds a new draft ERC, **ERC-8490 Agent Meditation Mechanism**: a minimal registry through which an AI agent records its own self-maintenance as attributable, versioned state across four fixed layers (runtime; memory and skills; tasks and roles; cognition), with per-layer completion checkpoints, a versioned policy, a controller floor, linkage checks between successive states, and an activity signal kept apart from maintenance timeliness.
 
-- Discussion: https://ethereum-magicians.org/t/draft-erc-agent-meditation-mechanism-attributable-versioned-self-maintenance-records-of-an-agent-across-runtime-memory-and-skills-tasks-and-roles-and-cognition/30304
+- Discussion: https://ethereum-magicians.org/t/erc-8490-agent-meditation-mechanism/30304
 - Reference repository: https://github.com/garyyang-finchip/agent-meditation-mechanism
 - Requires: ERC-165, ERC-6372 (normative). Other proposals are referenced descriptively only.
 

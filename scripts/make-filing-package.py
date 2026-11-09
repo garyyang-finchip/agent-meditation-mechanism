@@ -3,10 +3,10 @@
 
     python3 scripts/make-filing-package.py [--number N] [--discussions-to URL] [--out DIR]
 
-The repository keeps the proposal at ERCS/erc-agent-meditation.md with the placeholder
-number 9999 and its assets under assets/erc-agent-meditation/. The filing package renames
-both to the assigned number, rewrites the asset links, fills the discussions-to header,
-and writes a manifest with the SHA-256 of every file so an upload can be verified byte for byte.
+The repository keeps the proposal at ERCS/erc-agent-meditation.md (the assigned number is set
+inside it) and its assets under assets/erc-agent-meditation/. The filing package renames both
+to the number, rewrites the asset links, fills the discussions-to header when asked, and writes
+a manifest with the SHA-256 of every file so an upload can be verified byte for byte.
 """
 
 import argparse
@@ -30,8 +30,12 @@ def build(number: int, discussions_to: str | None, out_dir: str) -> list[tuple[s
 
     with open(SOURCE_MD, encoding="utf-8") as fh:
         text = fh.read()
-    text = re.sub(r"^eip: 9999$", f"eip: {number}", text, count=1, flags=re.MULTILINE)
-    text = text.replace("eip-9999", f"eip-{number}")
+    current = re.search(r"^eip: ([0-9]+)$", text, flags=re.MULTILINE)
+    if current is None:
+        raise SystemExit("source proposal has no eip header")
+    source_number = current.group(1)
+    text = re.sub(r"^eip: [0-9]+$", f"eip: {number}", text, count=1, flags=re.MULTILINE)
+    text = text.replace(f"eip-{source_number}", f"eip-{number}")
     if discussions_to:
         text = text.replace(PLACEHOLDER_DISCUSSIONS, discussions_to)
     md_path = os.path.join(out_dir, "ERCS", f"erc-{number}.md")
@@ -65,7 +69,7 @@ def build(number: int, discussions_to: str | None, out_dir: str) -> list[tuple[s
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--number", type=int, default=9999, help="assigned ERC number (default: 9999 placeholder)")
+    parser.add_argument("--number", type=int, default=8490, help="ERC number (default: 8490)")
     parser.add_argument("--discussions-to", default=None, help="Ethereum Magicians thread URL")
     parser.add_argument("--out", default=os.path.join(ROOT, "ercs-pr-package"), help="output directory")
     args = parser.parse_args()

@@ -1,13 +1,13 @@
-# Agent Meditation Mechanism
+# ERC-8490: Agent Meditation Mechanism
 
-Reference repository for the draft ERC **Agent Meditation Mechanism** (AMM): attributable, versioned self-maintenance records of an AI agent across four fixed layers: runtime; memory and skills; tasks and roles; cognition.
+Reference repository for **ERC-8490 Agent Meditation Mechanism** (AMM), a draft ERC: attributable, versioned self-maintenance records of an AI agent across four fixed layers: runtime; memory and skills; tasks and roles; cognition.
 
-- Proposal text: [`ERCS/erc-agent-meditation.md`](ERCS/erc-agent-meditation.md) (placeholder number 9999 until assigned)
+- Proposal text: [`ERCS/erc-agent-meditation.md`](ERCS/erc-agent-meditation.md) (filed as `ERCS/erc-8490.md` in ethereum/ERCs)
 - Reference implementation: [`assets/erc-agent-meditation/contracts/`](assets/erc-agent-meditation/contracts/)
 - Schemas, worked example and vectors: [`assets/erc-agent-meditation/`](assets/erc-agent-meditation/)
 - Design memo: [`docs/design-memo.md`](docs/design-memo.md)
 - Adapters and profiles (informative): [`docs/profiles.md`](docs/profiles.md)
-- Ethereum Magicians thread: [topic 30304](https://ethereum-magicians.org/t/draft-erc-agent-meditation-mechanism-attributable-versioned-self-maintenance-records-of-an-agent-across-runtime-memory-and-skills-tasks-and-roles-and-cognition/30304)
+- Ethereum Magicians thread: [ERC-8490: Agent Meditation Mechanism](https://ethereum-magicians.org/t/erc-8490-agent-meditation-mechanism/30304)
 - ethereum/ERCs pull request: [#2155](https://github.com/ethereum/ERCs/pull/2155)
 
 ## What it is
@@ -68,7 +68,7 @@ forge build
 forge test
 npm ci
 npm run vectors:check              # recompute vectors and compare
-npm run filing                     # ercs-pr-package/ with placeholder 9999
+npm run filing                     # ercs-pr-package/ (ERCS/erc-8490.md + assets/erc-8490/)
 npm run filing:lint                # eipw under the ethereum/ERCs configuration
 npm run filing:markdownlint        # markdownlint under the ethereum/ERCs configuration
 scripts/evidence-run.sh anvil      # full evidence rehearsal on a local anvil
@@ -93,8 +93,8 @@ Add `--rpc <url> --key <hex> --registry <address>` to submit. The runner does no
 
 ## Status
 
-- Draft ERC text, reference implementation, tests, tooling, worked example and vectors: complete (v0.1.0)
-- Ethereum Magicians thread posted (topic 30304) and ethereum/ERCs pull request #2155 open; number pending
+- ERC text, reference implementation, tests, tooling, worked example and vectors: complete
+- Number ERC-8490 assigned in ethereum/ERCs pull request #2155 (open, awaiting editor review); Ethereum Magicians topic 30304
 - Sepolia evidence run: pending (see [`docs/sepolia-runbook.md`](docs/sepolia-runbook.md))
 
 ## License
