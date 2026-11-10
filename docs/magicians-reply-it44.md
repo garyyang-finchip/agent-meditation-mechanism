@@ -1,0 +1,18 @@
+# Ethereum Magicians reply to post 3 (draft)
+
+---
+
+Thank you for running the registry unchanged and for pairing every case with a control. All three reproduce against revision 1 exactly as you describe; they are now the cases of `test/Review1.t.sol` in the repository, and revision 2 of the text and the reference registry addresses them as follows.
+
+**1. The policy pin and the reported start.** You are right, and the text said more than the mechanism delivers. Security Considerations described the start-time rule as protection against a subject that relaxes its policy; your case is the mirror image, a reporter who backdates a start to before a tightening, and the registry cannot tell that from a genuinely late report. Two changes:
+
+- Security Considerations now says it directly: the rule protects the age of a late submission and the meaning of a policy change going forward, it does not protect against the reporter, and `completedUnderPolicy` is what lets a reader see which version each completion was judged under.
+- I took your lower bound. A record is rejected unless `reportedStartedAt` is at or after the subject's `lastCycleEndedAt`, the reported end of the previously accepted cycle (new head field; error `StartBeforePreviousCycle`). I made the bound per subject rather than per layer: it gives the cycle records of one subject a total order, which is what consumers of the history need anyway, and the question you raised is about the policy, which is per subject. Routines that run concurrently on different layers are reported as one cycle with both layers in scope, or one after the other; pulses carry no reported time and do not bound the start, so a long cycle can still be accompanied by pulses (test `test_review1_pulsesDoNotBoundTheStart`). As you say, this limits backdating to the gap since the last accepted cycle and does not close the gap after a long silence; the residual case is kept as an explicit test (`test_review1_residualGapBeforeTighteningRemainsDocumented`) and the text now says that a start commitment, still listed as an extension, is what closes it, and that subjects who need the stronger guarantee should rotate report permissions when they tighten their policy.
+
+**2. `withdrawDemand`.** Not intended. The specification said who may issue a demand and was silent on who may withdraw one, and the reference followed the silence. Withdrawal now requires `RIGHT_DEMAND`, the same right as `demand()`, the specification says so, and your `RIGHT_FLOOR`-only controller is a test.
+
+**3. Layers a demand may name.** A layer outside the current policy's `supportedLayers` is rejected (`LayerNotSupported`): `report()` would refuse it, so the demand could never be met. For a supported layer without a timeliness requirement I went with the second reading: a demand is precisely how a controller asks for maintenance on a layer with no standing schedule, so an outstanding demand puts that layer on the clock. The status derivation judges it `FRESH`, `DUE` and `OVERDUE` against `dueBy` instead of returning `UNSCHEDULED`, and a completion at or after the demand returns it to `UNSCHEDULED`. The stored-but-never-overdue state you found is gone under both readings.
+
+Interface id unchanged (`0x9c81b550`); the ABI exports changed (Head gains `lastCycleEndedAt`, the registry gains one error). Tests 64 to 74. Revision 2 is on the pull request branch and in the repository; the Sepolia instance from the evidence run is revision 1, and I will redeploy with the next batch of changes rather than per revision.
+
+Yes please on the test file: a pull request against the repository is easiest, a gist works too. Thank you again for the care.

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0 (2026-11-10)
+
+Revision 2, after the first Magicians review round (topic 30304, post 3).
+
+- Kernel: a cycle's `reportedStartedAt` must be at or after the subject's `lastCycleEndedAt` (new head field; error `StartBeforePreviousCycle`), so cycle records are totally ordered per subject and a reported start cannot be backdated past the previously accepted cycle to reach an earlier policy version.
+- Kernel: `withdrawDemand` requires `RIGHT_DEMAND`, like `demand`.
+- Kernel: `demand` rejects layers outside the current policy's `supportedLayers`; an outstanding demand on a supported layer without a timeliness requirement puts that layer on the clock (`FRESH` / `DUE` / `OVERDUE` against `dueBy`) instead of reading `UNSCHEDULED`.
+- Specification: time-ordering rule, Demand section, status derivation, Head structure, Rationale (sequential cycles) and Security Considerations (the policy pin is only as strong as the reported start; `completedUnderPolicy`; start commitment extension) updated; Test Cases 14-16 added.
+- Tests: 74 (new `test/Review1.t.sol` with the reviewer's control/variant pairs and the residual-gap case).
+- Interface id unchanged (`0x9c81b550`); ABI exports regenerated (Head output, registry errors). The Sepolia instance is revision 1; redeployment deferred to the next batch.
+
 ## 0.2.1 (2026-11-09)
 
 - Sepolia evidence run recorded: registry `0x184dF595404414f91aD11986C47B9a539eF9559f` (Sourcify match), 15 transactions in blocks 12094378-12094420; `deployments/sepolia.json`, `docs/sepolia-evidence.md`, README deployment table, Magicians reply draft.

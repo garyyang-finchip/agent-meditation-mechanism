@@ -206,17 +206,35 @@ contract ReportTest is Harness {
         reg.report(AGENT, r);
     }
 
-    function test_report_completionTimeMustNotGoBackwards() public {
+    function test_report_cycleCannotStartBeforePreviousCycleEnded() public {
+        vm.warp(T0 + 2 * HOUR);
+        IAgentMeditation.CycleReport memory r1 = baseReport(bit(0), bit(0)); // ended at T0 + 1h59
+        submit(r1);
+        assertEq(reg.headOf(AGENT).lastCycleEndedAt, r1.reportedEndedAt, "last cycle end recorded");
+        vm.warp(T0 + 4 * HOUR);
+        IAgentMeditation.CycleReport memory late = baseReport(bit(1), bit(1));
+        late.reportedStartedAt = T0 + 1 * HOUR; // before the previous cycle ended
+        late.reportedEndedAt = T0 + 3 * HOUR;
+        vm.prank(AGENT);
+        vm.expectRevert(AgentMeditationRegistry.StartBeforePreviousCycle.selector);
+        reg.report(AGENT, late);
+
+        // starting exactly when the previous cycle ended is allowed
+        late.reportedStartedAt = r1.reportedEndedAt;
+        submit(late);
+    }
+
+    function test_report_completionTimeMustNotRepeat() public {
         vm.warp(T0 + 2 * HOUR);
         IAgentMeditation.CycleReport memory r1 = baseReport(bit(0), bit(0)); // ended at T0 + 1h59
         submit(r1);
         vm.warp(T0 + 4 * HOUR);
-        IAgentMeditation.CycleReport memory late = baseReport(bit(0), bit(0));
-        late.reportedStartedAt = T0 + 1 * HOUR;
-        late.reportedEndedAt = T0 + 1 * HOUR + 30 minutes; // older than the registered completion
+        IAgentMeditation.CycleReport memory same = baseReport(bit(0), bit(0));
+        same.reportedStartedAt = r1.reportedEndedAt;
+        same.reportedEndedAt = r1.reportedEndedAt; // zero-length cycle ending at the registered completion
         vm.prank(AGENT);
         vm.expectRevert(abi.encodeWithSelector(AgentMeditationRegistry.CompletionNotMonotonic.selector, uint8(0)));
-        reg.report(AGENT, late);
+        reg.report(AGENT, same);
     }
 
     function test_report_lateSubmissionKeepsItsReportedCompletionTime() public {

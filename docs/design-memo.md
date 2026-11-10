@@ -63,8 +63,10 @@ Boundaries that matter:
 8. A policy update never touches checkpoints; a longer interval never moves a deadline's anchor; only a completion moves the anchor.
 9. The effective requirement of a layer is never looser than the floor; the subject cannot write the floor, change the controller or grow its rights.
 10. A restore claim must match the root of the named earlier version.
+11. A cycle's reported start is at or after the reported end of the subject's previously accepted cycle: cycle records of one subject are totally ordered and do not overlap, and backdating a start to reach an earlier policy version is limited to the gap since the last accepted cycle (revision 2, after the first review round).
+12. Only a controller holding `RIGHT_DEMAND` issues or withdraws demands; a demand names only layers the current policy supports; an outstanding demand puts a layer without a timeliness requirement on the clock (revision 2).
 
-The reference test suite covers each of these; the first batch of tests was written against them before anything else.
+The reference test suite covers each of these; the first batch of tests was written against them before anything else, and the review-round cases are in `test/Review1.t.sol`.
 
 ## 6. Time
 
