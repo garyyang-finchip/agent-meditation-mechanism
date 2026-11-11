@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0 (2026-11-11)
+
+Revision 3, after the second Magicians review post (topic 30304, post 6).
+
+- Kernel: `setPolicy` rejects a version that drops a layer with an outstanding demand, or a layer the floor requires, from `supportedLayers` (error `LayerUnderObligation(layer)`); other policy changes stay possible while an obligation is outstanding.
+- Specification: Policy and floor section states the rule and that a floor may require an unsupported layer, which the subject's next policy version has to support; Rationale and Security Considerations updated; Test Case 17 added.
+- Tests: 78 (new `Review1bTest`: the reviewer's sequence, withdrawal, floor variant, floor on a never-supported layer).
+- Interface id unchanged (`0x9c81b550`); registry ABI gains one error.
+
 ## 0.3.0 (2026-11-10)
 
 Revision 2, after the first Magicians review round (topic 30304, post 3).

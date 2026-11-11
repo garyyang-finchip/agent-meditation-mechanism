@@ -189,3 +189,98 @@ contract Review1Test is Harness {
         assertEq(deadline(3), T0 + 2 * HOUR, "demand deadline wins over the 90-day interval");
     }
 }
+
+/// @dev Cases from the second review post (topic 30304, post 6): a policy change cannot drop a layer that is
+///      under an obligation (outstanding demand, or floor requirement).
+contract Review1bTest is Harness {
+    function setUp() public override {
+        super.setUp();
+        enrollDefault();
+    }
+
+    function _policyWithout(uint8 dropped) internal pure returns (IAgentMeditation.Policy memory p) {
+        p = defaultPolicy();
+        p.supportedLayers = 0x0F & ~dropped;
+        p.requiredLayers = 0x0F & ~dropped;
+    }
+
+    function test_review1b_policyCannotDropLayerWithOutstandingDemand() public {
+        // the reviewer's exact sequence: demand on an unscheduled layer 3, then a policy that drops layer 3
+        IAgentMeditation.Policy memory p = defaultPolicy();
+        p.requiredLayers = 0x07; // layer 3 supported, not required
+        vm.prank(AGENT);
+        reg.setPolicy(AGENT, p);
+        vm.prank(CONTROLLER);
+        reg.demand(AGENT, bit(3), T0 + 2 * HOUR);
+
+        vm.prank(AGENT);
+        vm.expectRevert(abi.encodeWithSelector(AgentMeditationRegistry.LayerUnderObligation.selector, uint8(3)));
+        reg.setPolicy(AGENT, _policyWithout(bit(3)));
+
+        // other policy changes remain possible while the demand is outstanding
+        IAgentMeditation.Policy memory p3 = defaultPolicy();
+        p3.requiredLayers = 0x07;
+        p3.dueWindow = 2 * HOUR;
+        vm.prank(AGENT);
+        reg.setPolicy(AGENT, p3);
+
+        // once the demand is completed, the layer can be dropped
+        vm.warp(T0 + 1 * HOUR);
+        IAgentMeditation.CycleReport memory r = baseReport(bit(3), bit(3));
+        submit(r);
+        assertEq(reg.demandOf(AGENT, 3).demandedAt, 0, "demand cleared");
+        vm.prank(AGENT);
+        reg.setPolicy(AGENT, _policyWithout(bit(3)));
+        assertTrue(status(3) == IAgentMeditation.MaintenanceStatus.UNSUPPORTED, "dropped after completion");
+    }
+
+    function test_review1b_withdrawalAlsoFreesTheLayer() public {
+        vm.prank(CONTROLLER);
+        reg.demand(AGENT, bit(2), T0 + 2 * HOUR);
+        vm.prank(AGENT);
+        vm.expectRevert(abi.encodeWithSelector(AgentMeditationRegistry.LayerUnderObligation.selector, uint8(2)));
+        reg.setPolicy(AGENT, _policyWithout(bit(2)));
+        vm.prank(CONTROLLER);
+        reg.withdrawDemand(AGENT, bit(2));
+        vm.prank(AGENT);
+        reg.setPolicy(AGENT, _policyWithout(bit(2)));
+    }
+
+    function test_review1b_policyCannotDropFloorRequiredLayer() public {
+        IAgentMeditation.Floor memory f;
+        f.requiredLayers = bit(3);
+        f.maxInterval[3] = 30 * DAY;
+        vm.prank(CONTROLLER);
+        reg.setFloor(AGENT, f);
+        vm.prank(AGENT);
+        vm.expectRevert(abi.encodeWithSelector(AgentMeditationRegistry.LayerUnderObligation.selector, uint8(3)));
+        reg.setPolicy(AGENT, _policyWithout(bit(3)));
+
+        // the floor may be relaxed by the controller, after which the layer can be dropped
+        IAgentMeditation.Floor memory none;
+        vm.prank(CONTROLLER);
+        reg.setFloor(AGENT, none);
+        vm.prank(AGENT);
+        reg.setPolicy(AGENT, _policyWithout(bit(3)));
+    }
+
+    function test_review1b_floorMayRequireAnUnsupportedLayerAndBindsTheNextPolicy() public {
+        // the subject never supported layer 3; the controller requires it anyway
+        vm.prank(AGENT);
+        reg.setPolicy(AGENT, _policyWithout(bit(3)));
+        IAgentMeditation.Floor memory f;
+        f.requiredLayers = bit(3);
+        f.maxInterval[3] = 30 * DAY;
+        vm.prank(CONTROLLER);
+        reg.setFloor(AGENT, f);
+        assertTrue(status(3) == IAgentMeditation.MaintenanceStatus.FRESH, "judged although unsupported");
+
+        // the subject's next policy version must support the layer
+        vm.prank(AGENT);
+        vm.expectRevert(abi.encodeWithSelector(AgentMeditationRegistry.LayerUnderObligation.selector, uint8(3)));
+        reg.setPolicy(AGENT, _policyWithout(bit(3)));
+        vm.prank(AGENT);
+        reg.setPolicy(AGENT, defaultPolicy());
+        assertEq(reg.requirementsOf(AGENT).supportedLayers, 0x0F, "support added");
+    }
+}
