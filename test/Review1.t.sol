@@ -62,9 +62,10 @@ contract Review1Test is Harness {
         reg.report(AGENT, backdated);
     }
 
-    function test_review1_residualGapBeforeTighteningRemainsDocumented() public {
+    function test_review1_residualGapIsClosedByTheCurrentVersionCheck() public {
         // with no accepted cycle between the last record and the tightening, a start inside that gap still
-        // selects version 1; the specification states this and leaves closing it to a start commitment
+        // selects version 1 (revision 2 left this open); since revision 4 the record must also fit the current
+        // version, so the SELF trigger version 2 forbids is refused (see Review2Test for the full set)
         vm.warp(T0 + 1 * HOUR);
         uint48 tightenedAt = _tightenToScheduledOnly();
         vm.warp(T0 + 2 * HOUR);
@@ -74,8 +75,8 @@ contract Review1Test is Harness {
         backdated.reportedStartedAt = tightenedAt - 1; // after enrollment, before the tightening
         backdated.reportedEndedAt = T0 + 90 minutes;
         vm.prank(OPERATOR);
+        vm.expectRevert(AgentMeditationRegistry.TriggerNotAllowed.selector);
         reg.report(AGENT, backdated);
-        assertEq(reg.checkpointOf(AGENT, 0).completedUnderPolicy, 1, "judged under version 1, visibly");
     }
 
     function test_review1_removedLayerControlAndBound() public {

@@ -5,15 +5,17 @@ const path = require("path");
 const {ethers} = require("ethers");
 const commit = require("./commit");
 
-const ABI_PATH = path.join(__dirname, "..", "..", "assets", "erc-agent-meditation", "abi", "IAgentMeditation.json");
+const ABI_DIR = path.join(__dirname, "..", "..", "assets", "erc-agent-meditation", "abi");
+const ABI_PATH = path.join(ABI_DIR, "IAgentMeditation.json");
 
 const OUTCOMES = {completed: 0, partial: 1, aborted: 2, failed: 3};
 const TRIGGERS = {scheduled: 0, event: 1, commanded: 2, self: 3};
 const OPS = {clean: 0, repair: 1, update: 2, iterate: 3};
 const LAYER_FILES = ["runtime.json", "memory-skills.json", "tasks-roles.json", "cognition.json"];
 
-function loadAbi() {
-  return JSON.parse(fs.readFileSync(ABI_PATH, "utf8"));
+/** ABI export of an interface or contract of the reference assets (default: the core interface). */
+function loadAbi(name = "IAgentMeditation") {
+  return JSON.parse(fs.readFileSync(path.join(ABI_DIR, `${name}.json`), "utf8"));
 }
 
 function iface() {

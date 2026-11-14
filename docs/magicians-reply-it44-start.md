@@ -1,0 +1,11 @@
+# Ethereum Magicians reply to post 9 (draft)
+
+---
+
+Thank you for the design, and for attacking your own sketch before posting it. Revision 4 takes both pieces. I folded them in directly rather than through a pull request, so the text, the registry and the tests moved together; your scenarios are reproduced in `test/Review2.t.sol`, including the three mistakes your first version made.
+
+(a) is now kernel rule 8: a record under a superseded version that is not pinned to a recorded start must also fit the current version's `supportedLayers` and `allowedTriggers`. I run the check after the ordering check, so the two tests that bound the start keep their `StartBeforePreviousCycle` error and only the former residual-gap test flips to rejection. Your two observations about revision 3 are both right and are in the Security Considerations: the gap is bounded in time, not in records, and a zero-length `FAILED` record under the new version seals it, documented as a pattern rather than a fix.
+
+(b) is a separate optional interface, `IAgentMeditationStart` (`begin`, `cancelStart`, `openStartOf`; ERC-165 id `0xb17415a3`), so the core id stays `0x9c81b550` and a minimal registry need not carry it; the reference registry implements it. Three departures from your sketch. An accepted record closes the open start only when it is pinned or its reported end is after the start, so a late record of an earlier cycle leaves the start alone. The recorder may cancel its own start, not only the subject. And there is no expiry: the next accepted record of a later cycle closes an open start, so keeping one open costs the subject every other registration, and `openStartOf` shows it; a profile that needs a time limit can add one. One slot per subject stays, because sequential cycles mean there is one next cycle; an operator closing the subject's start is the same trust the subject extended with report permission.
+
+The three-version case and the fields read through `completedUnderPolicy` are documented as accepted limits: the property promised is that what is accepted fits the version in force when it is accepted. Tests 78 to 96. Revision 4 is on the pull request branch and in the repository; the Sepolia redeploy will carry revisions 2 to 4 together.

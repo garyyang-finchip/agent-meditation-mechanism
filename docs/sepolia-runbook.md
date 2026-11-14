@@ -50,4 +50,6 @@ Live runs pass `--skip-simulation --slow --gas-estimate-multiplier 150` to `forg
 - `deployments/sepolia.json`: summary with the registry address, actor addresses, snapshots and every transaction (phase, function, hash, block, gas, status), collected from `broadcast/Evidence.s.sol/11155111/*-latest.json`.
 - Source verification: `forge verify-contract <registry> AgentMeditationRegistry --chain sepolia --verifier sourcify` (no API key needed), or an Etherscan verification with an API key.
 
+- Repeated runs: a run that starts at phase A deploys a new registry. If `deployments/sepolia.json` exists, the driver first moves it to `deployments/sepolia-<date>.json` (the date of its final snapshot), so every run keeps its record; the actor keys in `deployments/sepolia/keys.env` are reused and refunded by the deployer.
+
 The run of 2026-11-09 is recorded in `deployments/sepolia.json` and walked through in `docs/sepolia-evidence.md`.

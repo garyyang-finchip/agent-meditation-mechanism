@@ -1,6 +1,6 @@
 # Sepolia evidence run
 
-Run date: 2026-11-09 (blocks 12094378 to 12094420). Record: [`deployments/sepolia.json`](../deployments/sepolia.json). Driver: `scripts/evidence-run.sh sepolia` with `script/Evidence.s.sol` at repository state v0.1.3 (revision 1 of the registry). Revisions 2 and 3 (v0.3.0 and v0.4.0: start lower bound, `withdrawDemand` rights, demand layer validity, layers under obligation kept in the policy) change the registry bytecode; the deployed instance predates them and a redeployment with the current contracts is the next evidence step.
+Run date: 2026-11-09 (blocks 12094378 to 12094420). Record: [`deployments/sepolia.json`](../deployments/sepolia.json). Driver: `scripts/evidence-run.sh sepolia` with `script/Evidence.s.sol` at repository state v0.1.3 (revision 1 of the registry). Revisions 2, 3 and 4 (v0.3.0, v0.4.0 and v0.5.0: start lower bound, `withdrawDemand` rights, demand layer validity, layers under obligation kept in the policy, current-version check, recorded-start extension) change the registry bytecode; the deployed instance predates them and a redeployment with the current contracts is the next evidence step. The driver archives this record as `deployments/sepolia-<date>.json` before a new run writes `deployments/sepolia.json`.
 
 ## Deployment
 

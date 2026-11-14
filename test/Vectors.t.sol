@@ -3,6 +3,7 @@ pragma solidity ^0.8.28;
 
 import {Harness} from "./Harness.sol";
 import {IAgentMeditation} from "../assets/erc-agent-meditation/contracts/IAgentMeditation.sol";
+import {IAgentMeditationStart} from "../assets/erc-agent-meditation/contracts/IAgentMeditationStart.sol";
 import {AgentMeditationRegistry} from "../assets/erc-agent-meditation/contracts/AgentMeditationRegistry.sol";
 
 /// @dev Cross-checks the JSON vectors produced by tools/vectors.js against the Solidity implementation,
@@ -18,6 +19,18 @@ contract VectorsTest is Harness {
         bytes4 expected = bytes4(raw);
         assertEq(bytes32(expected), bytes32(type(IAgentMeditation).interfaceId), "interface id matches tooling");
         assertTrue(reg.supportsInterface(expected), "registry reports the vector id");
+    }
+
+    function test_vectors_extensionInterfaceId() public view {
+        string memory json = vm.readFile(IFACE);
+        bytes memory raw = vm.parseJsonBytes(json, ".extensions.IAgentMeditationStart.interfaceId");
+        assertEq(raw.length, 4, "4-byte identifier");
+        bytes4 expected = bytes4(raw);
+        assertEq(
+            bytes32(expected), bytes32(type(IAgentMeditationStart).interfaceId), "extension id matches tooling"
+        );
+        assertTrue(reg.supportsInterface(expected), "registry reports the extension id");
+        assertTrue(expected != type(IAgentMeditation).interfaceId, "distinct from the core id");
     }
 
     function test_vectors_tagsAndCommitments() public view {

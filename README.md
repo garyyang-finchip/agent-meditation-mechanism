@@ -16,7 +16,7 @@ An agent keeps its identity while its code, memories, skills, plans and ways of 
 
 It is a first-person mechanism. Only the subject or an operator it authorizes writes records about the subject. A controller (owner, principal, deployer) can set a floor of minimum requirements and request maintenance, and can never submit a record or change state. Everyone else reads.
 
-What the registry checks: who submitted; linkage of each record to the state it was computed against; that layers outside a cycle's scope did not change; that completions never go backwards in time; that the declared outcome agrees with the per-layer completions; that a cycle is interpreted under the policy version in effect when it started. What it does not and cannot check: that the off-chain routine ran, that a check passed, or that a change is an improvement.
+What the registry checks: who submitted; linkage of each record to the state it was computed against; that layers outside a cycle's scope did not change; that completions never go backwards in time and that cycles do not overlap; that the declared outcome agrees with the per-layer completions; that a cycle is interpreted under the policy version in effect when it started, and that a record under a superseded version also fits the current one unless its start was recorded. What it does not and cannot check: that the off-chain routine ran, that a check passed, or that a change is an improvement.
 
 ## The four layers
 
@@ -38,6 +38,7 @@ Each layer is committed with `keccak256(abi.encode(TAG, layer, keccak256(schemaI
 | Layer checkpoints | current commitment, last completion time (reported and recorded), governing policy version, last change version |
 | Cycle record | scope, completed layers, operations, outcome, trigger, governing policy version, reported times, post commitments, restore claim, record hash |
 | Pulse | activity signal only; refreshes nothing else |
+| Open start (optional extension) | one per subject, recorded before a cycle by the subject or a report operator; pins the record that reports exactly that start to the policy version in effect at the start |
 
 Derived views: `layerStatus` (FRESH / DUE / OVERDUE per layer, or UNSCHEDULED / UNSUPPORTED / NOT_ENROLLED) and `signalStatus` (PRESENT / SILENT / NOT_TRACKED), kept independent of each other.
 
@@ -46,7 +47,7 @@ Derived views: `layerStatus` (FRESH / DUE / OVERDUE per layer, or UNSCHEDULED / 
 ```text
 ERCS/erc-agent-meditation.md        proposal text (source; the filing package renames it)
 assets/erc-agent-meditation/
-  contracts/                        IAgentMeditation.sol, AgentMeditationRegistry.sol (+ ERC-165/6372 interfaces)
+  contracts/                        IAgentMeditation.sol, IAgentMeditationStart.sol, AgentMeditationRegistry.sol (+ ERC-165/6372 interfaces)
   abi/                              ABI exports
   schemas/                          JSON Schemas of the four layer documents, the policy and the cycle record
   examples/mcp-timeout-cycle/       worked example: baseline and post documents, policy, salts, cycle record

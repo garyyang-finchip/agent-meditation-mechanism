@@ -63,16 +63,25 @@ function build() {
   };
   for (const c of jcs.cases) c.keccak256 = commit.contentHash(c.input);
 
-  const iface = {
-    description: "ERC-165 interface identifier of IAgentMeditation (XOR of all function selectors).",
-    interfaceId: R.interfaceId(),
-    functions: R.loadAbi()
+  const selectors = (name) =>
+    R.loadAbi(name)
       .filter((f) => f.type === "function")
       .map((f) => {
         const frag = require("ethers").FunctionFragment.from(f);
         return {signature: frag.format("sighash"), selector: frag.selector};
       })
-      .sort((a, b) => (a.signature < b.signature ? -1 : 1)),
+      .sort((a, b) => (a.signature < b.signature ? -1 : 1));
+  const iface = {
+    description:
+      "ERC-165 interface identifiers: IAgentMeditation (required) and IAgentMeditationStart (optional recorded-start extension); each is the XOR of the interface's function selectors.",
+    interfaceId: R.interfaceId(),
+    functions: selectors("IAgentMeditation"),
+    extensions: {
+      IAgentMeditationStart: {
+        interfaceId: R.interfaceId(R.loadAbi("IAgentMeditationStart")),
+        functions: selectors("IAgentMeditationStart"),
+      },
+    },
   };
 
   return {

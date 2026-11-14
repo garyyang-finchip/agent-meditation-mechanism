@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.0 (2026-11-14)
+
+Revision 4, after the third Magicians review round (topic 30304, posts 8 and 9).
+
+- Kernel: a cycle record under a superseded policy version must also fit the current version's `supportedLayers` and `allowedTriggers` (rule 8), unless it is pinned to a recorded start. A backdated start can no longer reach a layer or a trigger the current version forbids; a late record that fits both versions is accepted unchanged.
+- Extension: `IAgentMeditationStart` (ERC-165 id `0xb17415a3`): `begin`, `cancelStart`, `openStartOf`; one open start per subject; the record that reports exactly that start from the account that recorded it is pinned; a pinned record consumes the start, a record of a later cycle voids it, a policy change voids it unless the subject or the changer recorded it. Errors `StartHeldByAnother`, `NoOpenStart`; events `CycleBegun`, `StartVoided`. The reference registry implements it.
+- Specification: rule 8, Recorded start section, extension interface, Rationale (what a backdated start can reach; recorded start), Security Considerations (gap bounded in time not count, sealing record, accepted limits, recorded starts), Test Cases 13, 14, 18, 19.
+- Tests: 96 (new `test/Review2.t.sol`: the reviewer's sequences for the current-version check, the two observations about revision 3, the extension and the attacks on it; the former residual-gap test now expects rejection). Vectors: extension interface id; `tools/lib/report.js` loads any ABI export by name.
+- Evidence driver: a live run starting at phase A archives the previous `deployments/<network>.json` under a dated name before writing a new one.
+- Core interface id unchanged (`0x9c81b550`); core ABI unchanged; registry ABI gains the extension's functions, events and errors.
+
 ## 0.4.0 (2026-11-11)
 
 Revision 3, after the second Magicians review post (topic 30304, post 6).

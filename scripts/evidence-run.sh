@@ -99,6 +99,18 @@ wait_for_overdue() {
   fi
 }
 
+# A new run on a live network starts a new registry; the record of the previous run is kept under a dated name
+# (the date of its final snapshot's clock value) before the summary writes deployments/<network>.json again.
+archive_previous() {
+  local record="deployments/$NETWORK.json"
+  [[ "$NETWORK" != "anvil" && -f "$record" ]] || return 0
+  local stamp; stamp="$(node -e 'const r=require(require("path").resolve(process.argv[1]));const c=r.snapshots&&r.snapshots.final&&r.snapshots.final.clock;console.log(c?new Date(Number(c)*1000).toISOString().slice(0,10):"undated")' "$record")"
+  local target="deployments/$NETWORK-$stamp.json"
+  local n=2; while [[ -e "$target" ]]; do target="deployments/$NETWORK-$stamp-$n.json"; n=$((n+1)); done
+  mv "$record" "$target"
+  log "archived the previous record as $target"
+}
+
 precheck() {
   local deployer; deployer="$(cast wallet address --private-key "$DEPLOYER_PK")"
   local balance; balance="$(cast balance "$deployer" --rpc-url "$RPC_URL")"
@@ -114,6 +126,7 @@ precheck() {
 case "$START_AT" in
   phaseA)
     precheck
+    archive_previous
     run_phase "phaseA()"; cp "$OUT/state.json" "$OUT/state-A.json"
     next_block
     ;&
