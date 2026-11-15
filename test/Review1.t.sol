@@ -55,8 +55,7 @@ contract Review1Test is Harness {
         IAgentMeditation.CycleReport memory backdated = baseReport(bit(1), bit(1));
         backdated.policyVersion = 1;
         backdated.trigger = TRIGGER_SELF;
-        backdated.reportedStartedAt = tightenedAt - 1;
-        backdated.reportedEndedAt = T0 + 2 * HOUR + 30 minutes;
+        setTimes(backdated, tightenedAt - 1, T0 + 2 * HOUR + 30 minutes);
         vm.prank(OPERATOR);
         vm.expectRevert(AgentMeditationRegistry.StartBeforePreviousCycle.selector);
         reg.report(AGENT, backdated);
@@ -72,8 +71,7 @@ contract Review1Test is Harness {
         IAgentMeditation.CycleReport memory backdated = baseReport(bit(0), bit(0));
         backdated.policyVersion = 1;
         backdated.trigger = TRIGGER_SELF;
-        backdated.reportedStartedAt = tightenedAt - 1; // after enrollment, before the tightening
-        backdated.reportedEndedAt = T0 + 90 minutes;
+        setTimes(backdated, tightenedAt - 1, T0 + 90 minutes); // after enrollment, before the tightening
         vm.prank(OPERATOR);
         vm.expectRevert(AgentMeditationRegistry.TriggerNotAllowed.selector);
         reg.report(AGENT, backdated);
@@ -104,8 +102,7 @@ contract Review1Test is Harness {
         vm.warp(T0 + 3 * HOUR);
         IAgentMeditation.CycleReport memory backdated = baseReport(bit(3), bit(3));
         backdated.policyVersion = 1;
-        backdated.reportedStartedAt = T0 + 30 minutes;
-        backdated.reportedEndedAt = T0 + 2 * HOUR + 30 minutes;
+        setTimes(backdated, T0 + 30 minutes, T0 + 2 * HOUR + 30 minutes);
         vm.prank(OPERATOR);
         vm.expectRevert(AgentMeditationRegistry.StartBeforePreviousCycle.selector);
         reg.report(AGENT, backdated);
@@ -118,8 +115,7 @@ contract Review1Test is Harness {
         reg.pulse(AGENT, 0);
         vm.warp(T0 + 2 * HOUR);
         IAgentMeditation.CycleReport memory r = baseReport(bit(1), bit(1));
-        r.reportedStartedAt = T0 + 30 minutes; // before the pulse
-        r.reportedEndedAt = T0 + 90 minutes;
+        setTimes(r, T0 + 30 minutes, T0 + 90 minutes); // before the pulse
         submit(r);
     }
 
@@ -177,8 +173,7 @@ contract Review1Test is Harness {
         // completing the layer clears the demand and the layer returns to unscheduled
         vm.warp(T0 + 3 * HOUR);
         IAgentMeditation.CycleReport memory r = baseReport(bit(3), bit(3));
-        r.reportedStartedAt = T0 + 2 * HOUR + 10 minutes;
-        r.reportedEndedAt = T0 + 2 * HOUR + 40 minutes;
+        setTimes(r, T0 + 2 * HOUR + 10 minutes, T0 + 2 * HOUR + 40 minutes);
         submit(r);
         assertEq(reg.demandOf(AGENT, 3).demandedAt, 0, "demand cleared");
         assertTrue(status(3) == IAgentMeditation.MaintenanceStatus.UNSCHEDULED, "back to unscheduled");

@@ -104,16 +104,23 @@ abstract contract Harness is TestBase {
         r.policyVersion = h.policyVersion;
         uint48 now_ = uint48(block.timestamp);
         if (now_ >= h.enrolledAt + 10 minutes) {
-            r.reportedStartedAt = now_ - 10 minutes;
-            r.reportedEndedAt = now_ - 1 minutes;
+            setTimes(r, now_ - 10 minutes, now_ - 1 minutes);
         } else {
-            r.reportedStartedAt = h.enrolledAt;
-            r.reportedEndedAt = now_;
+            setTimes(r, h.enrolledAt, now_);
         }
         r.nextPlannedAt = uint48(block.timestamp) + 1 days;
         r.restoresVersion = 0;
         r.recordHash = keccak256(abi.encode("record", block.timestamp, mask, completed));
         r.recordURI = "";
+    }
+
+    /// @dev Set the cycle's reported start and end; every completed layer completes at the end.
+    function setTimes(IAgentMeditation.CycleReport memory r, uint48 startedAt, uint48 endedAt) internal pure {
+        r.reportedStartedAt = startedAt;
+        r.reportedEndedAt = endedAt;
+        for (uint8 i = 0; i < 4; i++) {
+            r.completedAt[i] = r.completedLayers & (1 << i) != 0 ? endedAt : 0;
+        }
     }
 
     function submit(IAgentMeditation.CycleReport memory r) internal returns (uint64 seq) {

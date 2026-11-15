@@ -35,8 +35,8 @@ Each layer is committed with `keccak256(abi.encode(TAG, layer, keccak256(schemaI
 | --- | --- |
 | Policy (versioned) | what the subject maintains, which layers carry a deadline and at which interval, accepted triggers, pulse tracking, disclosure level |
 | Floor (controller) | minimum requirements the policy cannot relax |
-| Layer checkpoints | current commitment, last completion time (reported and recorded), governing policy version, last change version |
-| Cycle record | scope, completed layers, operations, outcome, trigger, governing policy version, reported times, post commitments, restore claim, record hash |
+| Layer checkpoints | current commitment, last completion time of the layer's routine (reported and recorded), governing policy version, last change version |
+| Cycle record | scope, completed layers with each layer's own completion time, operations, outcome, trigger, governing policy version, reported start and end, post commitments, restore claim, record hash |
 | Pulse | activity signal only; refreshes nothing else |
 | Open start (optional extension) | one per subject, recorded before a cycle by the subject or a report operator; pins the record that reports exactly that start to the policy version in effect at the start |
 

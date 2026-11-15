@@ -98,10 +98,14 @@ contract VectorsTest is Harness {
         r.policyVersion = uint32(vm.parseJsonUint(json, ".report[8]"));
         r.reportedStartedAt = uint48(vm.parseJsonUint(json, ".report[9]"));
         r.reportedEndedAt = uint48(vm.parseJsonUint(json, ".report[10]"));
-        r.nextPlannedAt = uint48(vm.parseJsonUint(json, ".report[11]"));
-        r.restoresVersion = uint64(vm.parseJsonUint(json, ".report[12]"));
-        r.recordHash = vm.parseJsonBytes32(json, ".report[13]");
-        r.recordURI = vm.parseJsonString(json, ".report[14]");
+        uint256[] memory completedAt = vm.parseJsonUintArray(json, ".report[11]");
+        for (uint8 i = 0; i < 4; i++) {
+            r.completedAt[i] = uint48(completedAt[i]);
+        }
+        r.nextPlannedAt = uint48(vm.parseJsonUint(json, ".report[12]"));
+        r.restoresVersion = uint64(vm.parseJsonUint(json, ".report[13]"));
+        r.recordHash = vm.parseJsonBytes32(json, ".report[14]");
+        r.recordURI = vm.parseJsonString(json, ".report[15]");
 
         // Calldata produced by the tooling equals the ABI encoding of the parsed struct
         bytes memory expectedCalldata = vm.parseJsonBytes(json, ".calldata");
@@ -134,7 +138,7 @@ contract VectorsTest is Harness {
         for (uint8 i = 0; i < 4; i++) {
             IAgentMeditation.LayerCheckpoint memory cp = reg.checkpointOf(AGENT, i);
             assertEq(cp.commitment, r.postCommitments[i], "post commitment registered");
-            assertEq(cp.lastCompletedAt, r.reportedEndedAt, "every layer completed its routine");
+            assertEq(cp.lastCompletedAt, r.completedAt[i], "each layer keeps its own completion time");
             assertEq(cp.lastChangedVersion, (expectedChanged & (1 << i)) != 0 ? 2 : 1, "change version");
         }
         assertEq(reg.rootAt(AGENT, 1), r.preRoot, "history: version 1");

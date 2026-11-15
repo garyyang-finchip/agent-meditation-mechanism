@@ -73,10 +73,19 @@ function buildReport(recordDoc, pre, post, options = {}) {
   let layerMask = 0;
   let completedLayers = 0;
   let opsMask = 0;
+  const completedAt = [0, 0, 0, 0];
   for (const l of recordDoc.layers) {
     if (!l.scope) continue;
     layerMask |= 1 << l.layer;
-    if (l.completed) completedLayers |= 1 << l.layer;
+    if (l.completed) {
+      completedLayers |= 1 << l.layer;
+      // Each completed layer carries the completion time of its own routine, inside the cycle.
+      const t = l.completedAt;
+      if (!Number.isInteger(t) || t < recordDoc.reportedStartedAt || t > recordDoc.reportedEndedAt) {
+        throw new Error(`layer ${l.layer} is completed but completedAt is missing or outside the cycle`);
+      }
+      completedAt[l.layer] = t;
+    }
     for (const c of l.changes || []) {
       if (!(c.op in OPS)) throw new Error(`unknown op ${c.op}`);
       opsMask |= 1 << (l.layer * 4 + OPS[c.op]);
@@ -104,6 +113,7 @@ function buildReport(recordDoc, pre, post, options = {}) {
       recordDoc.policyVersion,
       recordDoc.reportedStartedAt,
       recordDoc.reportedEndedAt,
+      completedAt,
       recordDoc.nextPlannedAt || 0,
       BigInt(recordDoc.restoresVersion || 0),
       commit.recordHash(recordDoc),
@@ -112,6 +122,7 @@ function buildReport(recordDoc, pre, post, options = {}) {
     summary: {
       layerMask,
       completedLayers,
+      completedAt,
       opsMask,
       changedLayers: post.commitments.reduce((m, c, i) => (c !== pre.commitments[i] ? m | (1 << i) : m), 0),
       outcome: OUTCOMES[recordDoc.outcome],

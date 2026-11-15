@@ -34,8 +34,7 @@ contract Review2Test is Harness {
         r = baseReport(bit(0), bit(0));
         r.policyVersion = 1;
         r.trigger = TRIGGER_SELF;
-        r.reportedStartedAt = startedAt;
-        r.reportedEndedAt = endedAt;
+        setTimes(r, startedAt, endedAt);
     }
 
     function _openStart() internal view returns (uint48 at, address by) {
@@ -66,8 +65,7 @@ contract Review2Test is Harness {
         vm.warp(T0 + 2 * HOUR);
         IAgentMeditation.CycleReport memory r = baseReport(bit(3), bit(3));
         r.policyVersion = 1;
-        r.reportedStartedAt = T0 + 30 minutes;
-        r.reportedEndedAt = T0 + 90 minutes;
+        setTimes(r, T0 + 30 minutes, T0 + 90 minutes);
         vm.prank(OPERATOR);
         vm.expectRevert(AgentMeditationRegistry.LayerNotSupported.selector);
         reg.report(AGENT, r);
@@ -80,8 +78,7 @@ contract Review2Test is Harness {
         IAgentMeditation.CycleReport memory r = baseReport(bit(0), bit(0));
         r.policyVersion = 1;
         r.trigger = TRIGGER_SCHEDULED; // allowed by both versions
-        r.reportedStartedAt = T0 + 20 minutes;
-        r.reportedEndedAt = T0 + 40 minutes;
+        setTimes(r, T0 + 20 minutes, T0 + 40 minutes);
         vm.prank(OPERATOR);
         reg.report(AGENT, r);
         IAgentMeditation.LayerCheckpoint memory cp = reg.checkpointOf(AGENT, 0);
@@ -99,8 +96,7 @@ contract Review2Test is Harness {
         for (uint48 k = 0; k < 3; k++) {
             IAgentMeditation.CycleReport memory r = baseReport(bit(1), bit(1));
             r.policyVersion = 1;
-            r.reportedStartedAt = T0 + 10 minutes + k * 10 minutes;
-            r.reportedEndedAt = T0 + 15 minutes + k * 10 minutes;
+            setTimes(r, T0 + 10 minutes + k * 10 minutes, T0 + 15 minutes + k * 10 minutes);
             r.postCommitments[1] = keccak256(abi.encode("memory", k));
             vm.prank(OPERATOR);
             reg.report(AGENT, r);
@@ -119,8 +115,7 @@ contract Review2Test is Harness {
         uint48 tightenedAt = _tightenToScheduledOnly(AGENT);
         IAgentMeditation.CycleReport memory seal = baseReport(bit(0), 0);
         seal.policyVersion = 2;
-        seal.reportedStartedAt = tightenedAt;
-        seal.reportedEndedAt = tightenedAt;
+        setTimes(seal, tightenedAt, tightenedAt);
         submit(seal);
         assertEq(reg.headOf(AGENT).lastCycleEndedAt, tightenedAt, "sealed at the change");
         assertEq(reg.checkpointOf(AGENT, 0).lastCompletedAt, 0, "a FAILED record completes nothing");
@@ -128,8 +123,7 @@ contract Review2Test is Harness {
         vm.warp(T0 + 2 * HOUR);
         IAgentMeditation.CycleReport memory r = baseReport(bit(0), bit(0));
         r.policyVersion = 1;
-        r.reportedStartedAt = tightenedAt - 1;
-        r.reportedEndedAt = T0 + 90 minutes;
+        setTimes(r, tightenedAt - 1, T0 + 90 minutes);
         vm.prank(OPERATOR);
         vm.expectRevert(AgentMeditationRegistry.StartBeforePreviousCycle.selector);
         reg.report(AGENT, r);
@@ -222,6 +216,7 @@ contract Review2Test is Harness {
         vm.warp(T0 + 2 * HOUR);
         IAgentMeditation.CycleReport memory first = _selfUnderV1(startedAt, startedAt); // zero-length, pinned
         first.completedLayers = 0;
+        first.completedAt[0] = 0;
         first.outcome = uint8(IAgentMeditation.Outcome.FAILED);
         submit(first);
         // the same start again: the ordering rule still allows it (start == lastCycleEndedAt), the pin is gone
@@ -361,16 +356,14 @@ contract Review2Test is Harness {
         // a late record of a cycle that ended before the start leaves the start open
         vm.warp(T0 + 2 * HOUR);
         IAgentMeditation.CycleReport memory earlier = baseReport(bit(1), bit(1));
-        earlier.reportedStartedAt = T0 + 20 minutes;
-        earlier.reportedEndedAt = T0 + 40 minutes;
+        setTimes(earlier, T0 + 20 minutes, T0 + 40 minutes);
         submit(earlier);
         (uint48 at,) = _openStart();
         assertEq(at, startedAt, "a cycle that ended before the start does not touch it");
 
         // a record whose end is after the start makes the start unusable under the ordering rule; it is cleared
         IAgentMeditation.CycleReport memory later = baseReport(bit(2), bit(2));
-        later.reportedStartedAt = T0 + 70 minutes;
-        later.reportedEndedAt = T0 + 80 minutes;
+        setTimes(later, T0 + 70 minutes, T0 + 80 minutes);
         vm.expectEmit(true, false, false, true);
         emit IAgentMeditationStart.StartVoided(AGENT, startedAt, AGENT);
         submit(later);

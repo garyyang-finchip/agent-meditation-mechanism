@@ -52,7 +52,7 @@ contract Evidence {
     bytes32 internal constant POST0 = 0xb5a33b6d3732e664a08a19ed068432a6ab1085bf7013b3ffce1ff88ec7dd8519;
     bytes32 internal constant POST1 = 0xd24fedfca7a64b7596414751a6d4a1ed7a89bf906bce4b453453a7b086d26641;
     bytes32 internal constant POST2 = 0x8f03de4a144d8d453c84d2d4546fb0f01af23bd6f7ba31d18dac0c6dd1a942f0;
-    bytes32 internal constant RECORD_HASH = 0xdcbc7047b5bf0d600b98d7829fc37757bdac9406ec992128cc90e910e9645088;
+    bytes32 internal constant RECORD_HASH = 0xc61bf3f0910e27bd5a91bc6c8c006e88e262a732021ed026804bedb76b813116;
     bytes32 internal constant POLICY_HASH = 0x5dfdd440a0eced1f62839fa0281f21cadacfa0f527642ea586b5f5c1ce5e41d9;
 
     // Follow-up states used by the evidence cycles (illustrative content hashes)
@@ -130,6 +130,7 @@ contract Evidence {
         r.policyVersion = 1;
         r.reportedStartedAt = now_;
         r.reportedEndedAt = now_;
+        r.completedAt = [now_, now_, now_, now_];
         r.nextPlannedAt = now_ + (floorShort ? 600 : 86400);
         r.recordHash = RECORD_HASH;
         r.recordURI = "ipfs://example/mcp-timeout-cycle/cycle-record.json";
@@ -174,6 +175,7 @@ contract Evidence {
         r3.policyVersion = 1;
         r3.reportedStartedAt = now_;
         r3.reportedEndedAt = now_;
+        r3.completedAt[3] = now_;
         r3.recordHash = keccak256("evidence/cycle-record/layer-3-adoption");
 
         vm.startBroadcast(agentPk);
@@ -193,6 +195,7 @@ contract Evidence {
         r0.policyVersion = 1;
         r0.reportedStartedAt = now_;
         r0.reportedEndedAt = now_;
+        r0.completedAt[0] = now_;
         r0.nextPlannedAt = now_ + 300;
         r0.recordHash = keccak256("evidence/cycle-record/layer-0-refresh");
 
@@ -226,6 +229,8 @@ contract Evidence {
         back.policyVersion = 1;
         back.reportedStartedAt = now_;
         back.reportedEndedAt = now_;
+        back.completedAt[0] = now_;
+        back.completedAt[3] = now_;
         back.restoresVersion = 2;
         back.recordHash = keccak256("evidence/cycle-record/rollback-to-version-2");
 

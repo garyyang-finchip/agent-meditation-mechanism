@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.0 (2026-11-15)
+
+Revision 5, after the fourth Magicians review post (topic 30304, post 11).
+
+- Record: `CycleReport` gains `completedAt[4]`, the completion time of each layer in `completedLayers`; it must lie between the cycle's reported start and end (inclusive), be later than the layer's registered completion, and be zero for every other layer (error `InvalidCompletionTime(layer)`). `lastCompletedAt` and demand clearing use the layer's own time; `reportedEndedAt` keeps ordering the subject's cycles. A layer that finished early no longer inherits the cycle's end.
+- Interface: the `report` signature changes, so the ERC-165 identifier of `IAgentMeditation` is now `0xe5b77145` (was `0x9c81b550`); `IAgentMeditationStart` is unchanged (`0xb17415a3`).
+- Specification: Clock, cycle record structure, rule 6, acceptance, Demand, Rationale (per-layer freshness), Security Considerations, Off-chain documents, Test Cases (worked example values, 8, 10, 13, new 20).
+- Schema and example: the cycle record document carries `completedAt` per completed layer; the worked example's record hash is now `0xc61bf3f0910e27bd5a91bc6c8c006e88e262a732021ed026804bedb76b813116`; vectors regenerated; tooling derives `completedAt` from the document and rejects a completed layer without a time inside the cycle.
+- Tests: 102 (new `test/Review3.t.sol`: the reviewer's 10:00/11:00 cycle and its control, bounds, the zero rule, per-layer monotonicity, demand clearing by the layer's time); harness helper `setTimes`.
+- Evidence script and driver updated for the new record layout; the Sepolia instance (revision 1) is to be redeployed with revisions 2 to 5.
+
 ## 0.5.0 (2026-11-14)
 
 Revision 4, after the third Magicians review round (topic 30304, posts 8 and 9).

@@ -188,8 +188,7 @@ contract StatusTest is Harness {
         // completion after the demand satisfies it
         vm.warp(T0 + 3 * HOUR);
         IAgentMeditation.CycleReport memory r = baseReport(bit(3), bit(3));
-        r.reportedStartedAt = T0 + 2 * HOUR + 30 minutes;
-        r.reportedEndedAt = T0 + 2 * HOUR + 50 minutes;
+        setTimes(r, T0 + 2 * HOUR + 30 minutes, T0 + 2 * HOUR + 50 minutes);
         submit(r);
         assertEq(reg.demandOf(AGENT, 3).demandedAt, 0, "demand cleared");
         assertEq(deadline(3), r.reportedEndedAt + 90 * DAY, "back to the policy interval");
@@ -201,8 +200,7 @@ contract StatusTest is Harness {
         reg.demand(AGENT, bit(0), T0 + 3 * HOUR);
         vm.warp(T0 + 2 * HOUR);
         IAgentMeditation.CycleReport memory r = baseReport(bit(0), bit(0));
-        r.reportedStartedAt = T0 + 10 minutes;
-        r.reportedEndedAt = T0 + 50 minutes; // ended before the demand was made
+        setTimes(r, T0 + 10 minutes, T0 + 50 minutes); // ended before the demand was made
         submit(r);
         assertEq(reg.demandOf(AGENT, 0).demandedAt, T0 + 1 * HOUR, "demand still outstanding");
         assertEq(deadline(0), T0 + 3 * HOUR, "still judged against the demand");

@@ -47,7 +47,7 @@ Boundaries that matter:
 - **Floor (controller).** Required layers, per-layer intervals, pulse interval. Effective requirements are the union of required layers and the minimum of intervals.
 - **Layer checkpoints.** Commitment, reported completion time of the last completed routine, recording time, governing policy version, state version of the last change.
 - **State versions.** A counter that advances only when a commitment changes, with the root of every version kept so that a restore claim can be verified in-contract.
-- **Cycle record.** Base version and pre-root, four post commitments, scope, completed layers, operations, outcome, trigger, governing policy version, reported start and end, planning hint, restore claim, record document hash.
+- **Cycle record.** Base version and pre-root, four post commitments, scope, completed layers, operations, outcome, trigger, governing policy version, reported start and end, one completion time per completed layer (inside the cycle), planning hint, restore claim, record document hash.
 - **Pulse.** Record count and activity signal only.
 - **Demand.** Per-layer `(demandedAt, dueBy)` set by the controller; lowers the deadline until a completion at or after `demandedAt` clears it.
 - **Open start (extension).** At most one per subject: `(startedAt, by)` recorded by the subject or a report operator before a cycle; a record that reports exactly that start from the same account is pinned to the policy version in effect at the start.
@@ -69,14 +69,15 @@ Boundaries that matter:
 13. A policy version cannot drop a layer that is under an obligation: one with an outstanding demand, or one the floor requires. The obligation is cleared by a qualifying completion or by the controller, never by the subject removing the layer (revision 3, after the second review post).
 14. A record under a superseded policy version that is not pinned to a recorded start also fits the current version's supported layers and allowed triggers: the gap between the last accepted cycle and a policy change admits late records that fit both versions, and never content the current version forbids. A zero-length `FAILED` record under the new version seals the gap (revision 4, after the third review post).
 15. A recorded start pins only the record that reports exactly that start from the account that recorded it; it is consumed by that record, voided by a record of a later cycle, and voided by a policy change made by anyone other than the subject or the recorder. An operator cannot replace the subject's open start (revision 4).
+16. Each completed layer carries its own completion time, at or after the cycle's start and at or before its end and later than the layer's registered completion; the cycle's end orders cycles, the layer's time anchors its deadline and clears its demands. A layer that finished early never inherits the cycle's end (revision 5, after the fourth review post).
 
-The reference test suite covers each of these; the first batch of tests was written against them before anything else, and the review-round cases are in `test/Review1.t.sol` and `test/Review2.t.sol`.
+The reference test suite covers each of these; the first batch of tests was written against them before anything else, and the review-round cases are in `test/Review1.t.sol`, `test/Review2.t.sol` and `test/Review3.t.sol`.
 
 ## 6. Time
 
 - One clock domain per deployment (ERC-6372, timestamp mode in this version); intervals are seconds.
 - Reported timepoints describe the off-chain cycle and are supplied by the submitter; recorded timepoints are read from the clock on acceptance. Both are kept.
-- Timeliness follows reported completion times after ordering checks, so that a late submission keeps its true age. Activity follows recorded times.
+- Timeliness follows the reported completion time of each layer after ordering checks, so that a late submission keeps its true age and a long cycle lends no freshness to a layer that finished early. Activity follows recorded times.
 - Never-completed required layers are anchored at the enrollment time, so enrollment alone never reads as recent maintenance, and a new requirement added long after enrollment can read as overdue immediately. That is the intended meaning.
 
 ## 7. Status

@@ -213,8 +213,7 @@ contract ReportTest is Harness {
         assertEq(reg.headOf(AGENT).lastCycleEndedAt, r1.reportedEndedAt, "last cycle end recorded");
         vm.warp(T0 + 4 * HOUR);
         IAgentMeditation.CycleReport memory late = baseReport(bit(1), bit(1));
-        late.reportedStartedAt = T0 + 1 * HOUR; // before the previous cycle ended
-        late.reportedEndedAt = T0 + 3 * HOUR;
+        setTimes(late, T0 + 1 * HOUR, T0 + 3 * HOUR); // before the previous cycle ended
         vm.prank(AGENT);
         vm.expectRevert(AgentMeditationRegistry.StartBeforePreviousCycle.selector);
         reg.report(AGENT, late);
@@ -230,8 +229,7 @@ contract ReportTest is Harness {
         submit(r1);
         vm.warp(T0 + 4 * HOUR);
         IAgentMeditation.CycleReport memory same = baseReport(bit(0), bit(0));
-        same.reportedStartedAt = r1.reportedEndedAt;
-        same.reportedEndedAt = r1.reportedEndedAt; // zero-length cycle ending at the registered completion
+        setTimes(same, r1.reportedEndedAt, r1.reportedEndedAt); // zero-length cycle ending at the registered completion
         vm.prank(AGENT);
         vm.expectRevert(abi.encodeWithSelector(AgentMeditationRegistry.CompletionNotMonotonic.selector, uint8(0)));
         reg.report(AGENT, same);
@@ -241,8 +239,7 @@ contract ReportTest is Harness {
         // a cycle that ended 20 hours ago and is submitted now counts from its reported end, not from now
         vm.warp(T0 + 23 * HOUR);
         IAgentMeditation.CycleReport memory r = baseReport(bit(0), bit(0));
-        r.reportedStartedAt = T0 + 2 * HOUR;
-        r.reportedEndedAt = T0 + 3 * HOUR;
+        setTimes(r, T0 + 2 * HOUR, T0 + 3 * HOUR);
         submit(r);
         IAgentMeditation.LayerCheckpoint memory cp = reg.checkpointOf(AGENT, 0);
         assertEq(cp.lastCompletedAt, T0 + 3 * HOUR, "reported completion kept");
@@ -265,8 +262,7 @@ contract ReportTest is Harness {
         // cycle started under v1 (before v2 took effect) and reports under v1: accepted
         IAgentMeditation.CycleReport memory r = baseReport(bit(0), bit(0));
         r.policyVersion = 1;
-        r.reportedStartedAt = T0 + 30 minutes;
-        r.reportedEndedAt = T0 + 90 minutes;
+        setTimes(r, T0 + 30 minutes, T0 + 90 minutes);
         submit(r);
         assertEq(reg.checkpointOf(AGENT, 0).completedUnderPolicy, 1, "completed under v1");
 
