@@ -1,6 +1,6 @@
 {
   "name": "agent-meditation-mechanism",
-  "version": "0.2.1",
+  "version": "0.6.2",
   "private": true,
   "description": "Reference tooling for the Agent Meditation Mechanism ERC: commitments, vectors, meditation runner, filing and lint helpers",
   "license": "CC0-1.0",
@@ -16,7 +16,7 @@
     "filing:lint": "node scripts/eipw-lint.js",
     "filing:markdownlint": "markdownlint-cli2 --config scripts/ercs.markdownlint.yaml \"ercs-pr-package/ERCS/*.md\"",
     "check:text": "python3 scripts/check-text.py",
-    "evidence:anvil": "scripts/evidence-run.sh anvil",
+    "evidence:anvil": "bash scripts/evidence-run.sh anvil",
     "evidence:summary": "node scripts/evidence-summary.js"
   },
   "dependencies": {

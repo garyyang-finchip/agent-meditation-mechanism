@@ -27,7 +27,7 @@ interface ScriptVm {
 
 /// @title Evidence
 /// @notice Evidence run of the Agent Meditation Mechanism reference registry on a live network.
-///         Driven by scripts/evidence-run.sh in three phases separated by real waiting time.
+///         Driven by scripts/evidence-run.sh in phases separated by real waiting time.
 ///
 ///         Phase A: deploy, fund actors, enroll the subject with the worked-example baseline, authorize an
 ///                  operator. Phase A2 (next block or later): pulse, record the worked-example cycle

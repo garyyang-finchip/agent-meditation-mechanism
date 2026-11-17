@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 # Evidence run driver for the Agent Meditation Mechanism reference registry.
 #
-#   scripts/evidence-run.sh anvil                # local rehearsal on a fresh anvil (time travel between phases)
-#   scripts/evidence-run.sh sepolia              # live run; needs RPC_URL and a funded DEPLOYER_PK (see docs/sepolia-runbook.md)
-#   scripts/evidence-run.sh sepolia phaseB       # resume at a step (phaseA, phaseA2, phaseB, phaseC, phaseD1,
+#   bash scripts/evidence-run.sh anvil           # local rehearsal on a fresh anvil (time travel between phases)
+#   bash scripts/evidence-run.sh sepolia         # live run; needs RPC_URL and a funded DEPLOYER_PK (see docs/sepolia-runbook.md)
+#   bash scripts/evidence-run.sh sepolia phaseB  # resume at a step (phaseA, phaseA2, phaseB, phaseC, phaseD1,
 #                                                #   phaseD1b, rejected, phaseD2, phaseD3, final)
+#
+# Run it through bash: files uploaded through the GitHub web interface do not keep the executable bit.
 #
 # Keys for the agent, controller and operator are generated once per network into
 # deployments/<network>/keys.env (ignored by git) and reused on resume.
