@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.1 (2026-11-18)
+
+Evidence run for the Sepolia redeployment with revisions 2 to 5; no change to the specification, the contracts or the filing package.
+
+- `script/Evidence.s.sol`: phase D. D1: the subject records a start, the controller demands layer 2. D1b: policy version 3 forbids the `SELF` trigger; four calls the registry must reject are encoded, one per revision (`StartBeforePreviousCycle()`, `LayerUnderObligation(2)`, `TriggerNotAllowed()` from rule 8, `InvalidCompletionTime(1)`). D2: the cycle pinned to the recorded start under version 2 with the `SELF` trigger, layer 0 completed at the start (reads overdue at once) and layer 2 at the end (clears its demand). D3: layer-0 refresh under version 3 and a pulse. Snapshots now carry the last cycle end, the open start, interface support, and per layer the governing policy version and the demand. Phase A tops actors up to their targets instead of sending the full amount.
+- `scripts/evidence-rejected.js` (new): checks each rejected call with `eth_call` against its expected error, then sends it with a fixed gas limit and requires status 0; writes `deployments/<network>/rejected.json`.
+- `scripts/evidence-run.sh`: steps `phaseD1`, `phaseD1b`, `rejected`, `phaseD2` (after waiting until 330 s past the recorded start), `phaseD3`; funding budgets from the gas the actors used on Sepolia; the precheck asks the node for the deployment's gas estimate and counts only actor top-ups.
+- `scripts/evidence-summary.js`: interface identifiers, the new snapshots and the rejected calls in `deployments/<network>.json`.
+- Runbook and design memo describe phase D; anvil rehearsal: 21 transactions and 4 rejected calls, every status as expected.
+
 ## 0.6.0 (2026-11-15)
 
 Revision 5, after the fourth Magicians review post (topic 30304, post 11).

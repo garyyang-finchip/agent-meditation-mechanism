@@ -3,7 +3,8 @@
 #
 #   scripts/evidence-run.sh anvil                # local rehearsal on a fresh anvil (time travel between phases)
 #   scripts/evidence-run.sh sepolia              # live run; needs RPC_URL and a funded DEPLOYER_PK (see docs/sepolia-runbook.md)
-#   scripts/evidence-run.sh sepolia phaseB       # resume at a phase (phaseA, phaseA2, phaseB, phaseC, final)
+#   scripts/evidence-run.sh sepolia phaseB       # resume at a step (phaseA, phaseA2, phaseB, phaseC, phaseD1,
+#                                                #   phaseD1b, rejected, phaseD2, phaseD3, final)
 #
 # Keys for the agent, controller and operator are generated once per network into
 # deployments/<network>/keys.env (ignored by git) and reused on resume.
@@ -17,10 +18,11 @@ cd "$ROOT"
 OUT="deployments/$NETWORK"
 mkdir -p "$OUT"
 export EVIDENCE_STATE="$OUT/state.json"
+export EVIDENCE_CALLS="$OUT/rejected-calls.json"
 export SHORT_INTERVALS="${SHORT_INTERVALS:-1}"
 export FUND_WEI="${FUND_WEI:-3000000000000000}"   # 0.003 ETH per actor
 
-WAIT_SECONDS="${WAIT_SECONDS:-330}"               # floor for layer 0 is 300 s with SHORT_INTERVALS=1
+WAIT_SECONDS="${WAIT_SECONDS:-330}"               # floor for layer 0 is 300 s with SHORT_INTERVALS=1 (both waits)
 ANVIL_PID=""
 
 log() { printf '[%s] %s\n' "$(date -u +%H:%M:%S)" "$*"; }
@@ -50,12 +52,13 @@ else
   FORGE_EXTRA=(--skip-simulation --slow --gas-estimate-multiplier 150)
 fi
 
-# Actor funding scaled to the live gas price (gas budgets carry a 2x margin; floor 0.0005 ETH each).
+# Actor funding scaled to the live gas price; gas budgets follow what the actors used on Sepolia in the first run
+# plus phase D, with a 2x margin; floor 0.0005 ETH each. Phase A tops each actor up to its target.
 GAS_PRICE_WEI="$(cast gas-price --rpc-url "$RPC_URL")"
 scaled() { local units="$1"; local v=$(( GAS_PRICE_WEI * units * 2 )); local floor=500000000000000; echo $(( v > floor ? v : floor )); }
-export FUND_AGENT_WEI="${FUND_AGENT_WEI:-$(scaled 1100000)}"
-export FUND_OPERATOR_WEI="${FUND_OPERATOR_WEI:-$(scaled 450000)}"
-export FUND_CONTROLLER_WEI="${FUND_CONTROLLER_WEI:-$(scaled 200000)}"
+export FUND_AGENT_WEI="${FUND_AGENT_WEI:-$(scaled 5500000)}"
+export FUND_OPERATOR_WEI="${FUND_OPERATOR_WEI:-$(scaled 2000000)}"
+export FUND_CONTROLLER_WEI="${FUND_CONTROLLER_WEI:-$(scaled 800000)}"
 
 if [[ -f "$OUT/keys.env" ]]; then
   # shellcheck disable=SC1090
@@ -114,12 +117,42 @@ archive_previous() {
 precheck() {
   local deployer; deployer="$(cast wallet address --private-key "$DEPLOYER_PK")"
   local balance; balance="$(cast balance "$deployer" --rpc-url "$RPC_URL")"
-  local deploy_cost=$(( GAS_PRICE_WEI * 4500000 * 3 / 2 ))
-  local need=$(( deploy_cost + FUND_AGENT_WEI + FUND_OPERATOR_WEI + FUND_CONTROLLER_WEI + GAS_PRICE_WEI * 300000 ))
-  log "deployer $deployer balance $(cast from-wei "$balance") ETH; gas price $(cast from-wei "$GAS_PRICE_WEI" gwei) gwei; phase A needs about $(cast from-wei "$need") ETH"
-  if [[ "$balance" -lt "$need" ]]; then
-    echo "deployer balance is below the phase A estimate; top it up or lower FUND_*_WEI" >&2
+  # The node prices the deployment under its own gas schedule (Sepolia charged about 7x a local EVM in the first run).
+  local initcode; initcode="$(forge inspect assets/erc-agent-meditation/contracts/AgentMeditationRegistry.sol:AgentMeditationRegistry bytecode)"
+  local deploy_gas; deploy_gas="$(cast estimate --rpc-url "$RPC_URL" --from "$deployer" --create "$initcode" 2>/dev/null || echo 35000000)"
+  local shortfall=0 who target bal
+  for who in AGENT CONTROLLER OPERATOR; do
+    local pk_var="${who}_PK" fund_var="FUND_${who}_WEI"
+    bal="$(cast balance "$(cast wallet address --private-key "${!pk_var}")" --rpc-url "$RPC_URL")"
+    target="${!fund_var}"
+    if (( bal < target )); then shortfall=$(( shortfall + target - bal )); fi
+  done
+  # 2x the deployment estimate covers the 1.5x gas limit and fee headroom the node checks up front.
+  local need=$(( GAS_PRICE_WEI * deploy_gas * 2 + shortfall + GAS_PRICE_WEI * 400000 ))
+  log "deployer $deployer balance $(cast from-wei "$balance") ETH; gas price $(cast from-wei "$GAS_PRICE_WEI" gwei) gwei"
+  log "deployment estimate $deploy_gas gas; actor top-ups $(cast from-wei "$shortfall") ETH; phase A needs about $(cast from-wei "$need") ETH"
+  if [[ "$balance" -lt "$need" && "${SKIP_PRECHECK:-0}" != "1" ]]; then
+    echo "deployer balance is below the phase A estimate; top it up, lower FUND_*_WEI, or set SKIP_PRECHECK=1" >&2
     exit 3
+  fi
+}
+
+# Phase D2 needs layer 0's completion at the recorded start to be older than its floor interval.
+wait_after_start() {
+  local registry agent started now remaining
+  registry="$(node -e 'console.log(require(require("path").resolve(process.argv[1])).registry)' "$OUT/state.json")"
+  agent="$(cast wallet address --private-key "$AGENT_PK")"
+  started="$(cast call "$registry" "openStartOf(address)(uint48,address)" "$agent" --rpc-url "$RPC_URL" | head -n1 | awk '{print $1}')"
+  now="$(cast block latest --field timestamp --rpc-url "$RPC_URL")"
+  remaining=$(( started + WAIT_SECONDS - now ))
+  if (( remaining <= 0 )); then return 0; fi
+  if [[ "$NETWORK" == "anvil" ]]; then
+    log "advancing anvil time by $remaining seconds after the recorded start"
+    cast rpc --rpc-url "$RPC_URL" evm_increaseTime "$remaining" >/dev/null
+    cast rpc --rpc-url "$RPC_URL" evm_mine >/dev/null
+  else
+    log "waiting $remaining seconds for layer 0's completion at the recorded start to pass its floor interval"
+    sleep "$remaining"
   fi
 }
 
@@ -140,6 +173,25 @@ case "$START_AT" in
     ;&
   phaseC)
     run_phase "phaseC()"; cp "$OUT/state.json" "$OUT/state-C.json"
+    ;&
+  phaseD1)
+    run_phase "phaseD1()"; cp "$OUT/state.json" "$OUT/state-D1.json"
+    next_block
+    ;&
+  phaseD1b)
+    run_phase "phaseD1b()"; cp "$OUT/state.json" "$OUT/state-D1b.json"
+    ;&
+  rejected)
+    log "sending the four calls the registry must reject (one per revision)"
+    node scripts/evidence-rejected.js "$NETWORK"
+    wait_after_start
+    ;&
+  phaseD2)
+    run_phase "phaseD2()"; cp "$OUT/state.json" "$OUT/state-D2.json"
+    snapshot "perLayer"
+    ;&
+  phaseD3)
+    run_phase "phaseD3()"; cp "$OUT/state.json" "$OUT/state-D3.json"
     ;&
   final)
     snapshot "final"

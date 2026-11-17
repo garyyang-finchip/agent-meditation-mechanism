@@ -20,6 +20,20 @@ function readSnapshot(label) {
   return fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, "utf8")) : null;
 }
 
+function readJson(p) {
+  return fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, "utf8")) : null;
+}
+
+/** ERC-165 identifiers of the interfaces the deployed registry reports, from the vectors. */
+function interfaceIds() {
+  const v = readJson(path.join(ROOT, "assets", "erc-agent-meditation", "vectors", "interface.json"));
+  if (!v) return null;
+  return {
+    IAgentMeditation: v.interfaceId,
+    IAgentMeditationStart: v.extensions?.IAgentMeditationStart?.interfaceId ?? null,
+  };
+}
+
 function collectBroadcasts() {
   const root = path.join(ROOT, "broadcast", "Evidence.s.sol");
   if (!fs.existsSync(root)) return [];
@@ -57,17 +71,24 @@ const summary = {
   network,
   registry: state.registry,
   actors: {agent: state.agent, controller: state.controller, operator: state.operator},
+  interfaces: interfaceIds(),
   snapshots: {
     afterPhaseA: readSnapshot("A"),
     afterPhaseA2: readSnapshot("A2"),
     overdue: readSnapshot("overdue"),
     afterPhaseB: readSnapshot("B"),
     afterPhaseC: readSnapshot("C"),
+    afterPhaseD1: readSnapshot("D1"),
+    afterPhaseD1b: readSnapshot("D1b"),
+    perLayer: readSnapshot("perLayer"),
     final: readSnapshot("final"),
   },
   transactions: collectBroadcasts(),
+  rejectedCalls: readJson(path.join(outDir, "rejected.json")) || [],
 };
 
 const outFile = path.join(ROOT, "deployments", `${network}.json`);
 fs.writeFileSync(outFile, JSON.stringify(summary, null, 2) + "\n");
-process.stdout.write(`wrote ${path.relative(ROOT, outFile)} (${summary.transactions.length} transactions)\n`);
+process.stdout.write(
+  `wrote ${path.relative(ROOT, outFile)} (${summary.transactions.length} transactions, ${summary.rejectedCalls.length} rejected calls)\n`
+);
