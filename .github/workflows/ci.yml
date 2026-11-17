@@ -48,10 +48,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: scripts/evidence-run.sh anvil
+          cache: npm
+      - run: npm ci
+      # Invoked through bash: files uploaded through the GitHub web interface do not keep the executable bit.
+      - run: bash scripts/evidence-run.sh anvil
       - uses: actions/upload-artifact@v4
         with:
           name: anvil-evidence
           path: |
             deployments/anvil.json
             deployments/anvil/state-*.json
+            deployments/anvil/rejected.json
